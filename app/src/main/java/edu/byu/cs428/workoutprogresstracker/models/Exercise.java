@@ -13,6 +13,18 @@ class Exercise {
     List<History> history;
     String muscleGroup;
 
+    public UUID getId() {
+        return id;
+    }
+
+    public List<History> getHistory() {
+        return history;
+    }
+
+    public String getMuscleGroup() {
+        return muscleGroup;
+    }
+
     public Exercise() {
         this.id = UUID.randomUUID();
     }
