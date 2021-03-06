@@ -5,13 +5,23 @@ import java.util.UUID;
 
 import edu.byu.cs428.workoutprogresstracker.models.metric.Metric;
 
-class Exercise {
+public class Exercise {
     UUID id;
     String name;
     Metric objective;
     Metric goal;
     List<History> history;
     String muscleGroup;
+
+    public Exercise(UUID id, String name, Metric objective, Metric goal, List<History> history,
+                    String muscleGroup){
+        this.id = id;
+        this.name = name;
+        this.objective = objective;
+        this.goal = goal;
+        this.history = history;
+        this.muscleGroup = muscleGroup;
+    }
 
     public UUID getId() {
         return id;
@@ -51,5 +61,13 @@ class Exercise {
 
     public void updateGoalValue(Number value) {
         this.goal.updateValue(value);
+    }
+
+    public Metric getObjective() {
+        return objective;
+    }
+
+    public Metric getGoal() {
+        return goal;
     }
 }
