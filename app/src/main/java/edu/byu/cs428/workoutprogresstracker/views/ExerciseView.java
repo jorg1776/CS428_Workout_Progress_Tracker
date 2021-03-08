@@ -1,4 +1,8 @@
 package edu.byu.cs428.workoutprogresstracker.views;
 
-class ExerciseView {
+import androidx.appcompat.app.AppCompatActivity;
+
+class ExerciseView extends AppCompatActivity {
+
+
 }
