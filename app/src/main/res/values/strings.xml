@@ -3,4 +3,11 @@
     <string name="username_hint">    username</string>
     <string name="password_hint">    password</string>
     <string name="login">Login</string>
+
+    <string name="calendarTabTitle">Calendar</string>
+    <string name="workoutsTabTitle">Workouts</string>
+    <string name="exercisesTabTitle">Exercises</string>
+    <string name="plus">+</string>
+    <string name="exerciseName">Exercise</string>
+    <string name="loadingData">Loading more data...</string>
 </resources>

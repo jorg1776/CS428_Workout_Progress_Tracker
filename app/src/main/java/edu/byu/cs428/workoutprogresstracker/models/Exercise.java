@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import edu.byu.cs428.workoutprogresstracker.models.metric.Metric;
 
-class Exercise {
+public class Exercise {
     UUID id;
     String name;
     Metric objective;
