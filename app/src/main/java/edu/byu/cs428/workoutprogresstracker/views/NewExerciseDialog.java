@@ -64,8 +64,17 @@ public class NewExerciseDialog extends DialogFragment implements AdapterView.OnI
             public void onClick(View v) {
                 String name = exerciseName.getText().toString();
                 int selectedId = radioGroup.getCheckedRadioButtonId();
+
+                if(name.equals("") || selectedId == -1 || selectedMuscleGroup == null) {
+                    Toast toast=Toast.makeText(getActivity(),"Missing Information",Toast.LENGTH_SHORT);
+                    toast.show();
+                    return;
+                }
+
                 radioButton = (RadioButton) view.findViewById(selectedId);
                 metric = radioButton.getText().toString();
+
+
                 NewExerciseRequest request = new NewExerciseRequest(name, metric, selectedMuscleGroup);
 
 
