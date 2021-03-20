@@ -1,12 +1,11 @@
 package edu.byu.cs428.workoutprogresstracker.views;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,12 +19,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import edu.byu.cs428.workoutprogresstracker.R;
 import edu.byu.cs428.workoutprogresstracker.models.Exercise;
 import edu.byu.cs428.workoutprogresstracker.presenters.ExercisePresenter;
-import edu.byu.cs428.workoutprogresstracker.services.ExerciseService;
 import edu.byu.cs428.workoutprogresstracker.services.requests.ExercisesRequest;
 import edu.byu.cs428.workoutprogresstracker.services.responses.ExercisesResponse;
 import edu.byu.cs428.workoutprogresstracker.views.asyncTasks.ExerciseTask;
@@ -60,7 +57,22 @@ public class ExerciseFragment extends Fragment {
 
         exerciseRecyclerView.addOnScrollListener(new ExerciseRecyclerViewPaginationScrollListener(layoutManager));
 
+        Button addButton = view.findViewById(R.id.add_button);
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("click");
+                createExerciseBox();
+            }
+        });
+
         return view;
+    }
+
+    private void createExerciseBox () {
+        NewExerciseDialog dialog = new NewExerciseDialog();
+        dialog.show(getParentFragmentManager(), LOG_TAG);
     }
 
     private class ExerciseHolder extends RecyclerView.ViewHolder {

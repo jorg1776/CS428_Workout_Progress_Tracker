@@ -10,4 +10,7 @@
     <string name="plus">+</string>
     <string name="exerciseName">Exercise</string>
     <string name="loadingData">Loading more data...</string>
+    <string name="new_exercise_name_hint">exercise name</string>
+    <string name="create">create</string>
+    <string name="spinner_title">Muscle group:</string>
 </resources>
