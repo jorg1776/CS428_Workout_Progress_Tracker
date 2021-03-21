@@ -6,12 +6,14 @@ import java.util.UUID;
 import edu.byu.cs428.workoutprogresstracker.models.metric.Metric;
 
 public class Exercise {
-    private final int id;
+    private int id;
     private String name;
     private Metric objective;
     private Metric goal;
     private List<History> history;
     private String muscleGroup;
+
+    public Exercise() {}
 
     public Exercise(int id, String name, Metric objective, Metric goal, List<History> history,
                     String muscleGroup){
