@@ -76,4 +76,14 @@ public class SQLiteDAO extends SQLiteOpenHelper {
 
         return result;
     }
+
+    public long executeUpdate(String table, ContentValues contentValues, String whereClause, String[] whereArgs) throws Exception {
+        long result = DB.update(table, contentValues, whereClause, whereArgs);
+
+        if(result == -1) {
+            throw new Exception();
+        }
+
+        return result;
+    }
 }
