@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import java.util.List;
-import java.util.UUID;
 
 import edu.byu.cs428.workoutprogresstracker.dao.DataAccessException;
 import edu.byu.cs428.workoutprogresstracker.dao.WorkoutsDAO;
@@ -14,16 +13,15 @@ public class WorkoutsSQLiteDAO implements WorkoutsDAO {
     private final SQLiteDAO dao = new SQLiteDAO();
 
     @Override
-    public Workout loadWorkout(UUID workoutID) throws DataAccessException {
+    public Workout loadWorkout(int workoutID) throws DataAccessException {
         Workout workout = null;
-        String id = workoutID.toString();
 
         try {
-            Cursor cursor = dao.executeQuery("Select * from WorkoutTable where id = ?", new String[]{id});
+            Cursor cursor = dao.executeQuery("SELECT * FROM workouts WHERE workout_id = ?", new String[]{Integer.toString(workoutID)});
 
             if (cursor.getCount() > 0) {
-                String name = cursor.getString(cursor.getColumnIndex("name"));
-                String muscleGroup = cursor.getString(cursor.getColumnIndex("muscleGroup"));
+                String name = cursor.getString(cursor.getColumnIndex("workout_name"));
+                String muscleGroup = cursor.getString(cursor.getColumnIndex("workout_muscle_group"));
                 workout = new Workout(workoutID, name, null, muscleGroup);
             }
 
@@ -37,12 +35,12 @@ public class WorkoutsSQLiteDAO implements WorkoutsDAO {
     @Override
     public void saveWorkout(Workout workout) throws DataAccessException {
         ContentValues contentValues = new ContentValues();
-        contentValues.put("id", workout.getId().toString());
-        contentValues.put("name", workout.getName());
-        contentValues.put("muscleGroup", workout.getMuscleGroup());
+        contentValues.put("workout_id", workout.getId());
+        contentValues.put("workout_name", workout.getName());
+        contentValues.put("workout_muscle_group", workout.getMuscleGroup());
 
         try {
-            dao.executeInsert("WorkoutTable", contentValues);
+            dao.executeInsert("workouts", contentValues);
         } catch (Exception e) {
             e.printStackTrace();
             throw new DataAccessException("ERROR: encountered while executing saveWorkout");
@@ -50,7 +48,7 @@ public class WorkoutsSQLiteDAO implements WorkoutsDAO {
     }
 
     @Override
-    public List<Workout> loadWorkoutsList(String type, int count, UUID lastWorkout) {
+    public List<Workout> loadWorkoutsList(String type, int count, int lastWorkout) {
         return null;
     }
 }

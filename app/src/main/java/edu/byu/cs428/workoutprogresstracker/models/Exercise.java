@@ -6,14 +6,14 @@ import java.util.UUID;
 import edu.byu.cs428.workoutprogresstracker.models.metric.Metric;
 
 public class Exercise {
-    UUID id;
-    String name;
-    Metric objective;
-    Metric goal;
-    List<History> history;
-    String muscleGroup;
+    private final int id;
+    private String name;
+    private Metric objective;
+    private Metric goal;
+    private List<History> history;
+    private String muscleGroup;
 
-    public Exercise(UUID id, String name, Metric objective, Metric goal, List<History> history,
+    public Exercise(int id, String name, Metric objective, Metric goal, List<History> history,
                     String muscleGroup){
         this.id = id;
         this.name = name;
@@ -23,7 +23,7 @@ public class Exercise {
         this.muscleGroup = muscleGroup;
     }
 
-    public UUID getId() {
+    public int getId() {
         return id;
     }
 
@@ -33,10 +33,6 @@ public class Exercise {
 
     public String getMuscleGroup() {
         return muscleGroup;
-    }
-
-    public Exercise() {
-        this.id = UUID.randomUUID();
     }
 
     public String getName() {

@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import edu.byu.cs428.workoutprogresstracker.WorkoutProgressTracker;
 
 public class SQLiteDAO extends SQLiteOpenHelper {
-    private static final String TAG = "DAO";
     private final SQLiteDatabase DB = this.getWritableDatabase();
 
     public SQLiteDAO() {
@@ -19,33 +18,49 @@ public class SQLiteDAO extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase DB) {
 
         String sqlCreateExerciseTableStmt =
-                "CREATE TABLE IF NOT EXISTS ExerciseTable " +
+                "CREATE TABLE IF NOT EXISTS exercises " +
                         "(" +
-                        "id TEXT NOT NULL UNIQUE, " +
-                        "name TEXT NOT NULL, " +
-                        "objective TEXT NOT NULL, " +
-                        "goal TEXT NOT NULL, " +
-                        "muscleGroup TEXT NOT NULL, " +
-                        "PRIMARY KEY (id)" +
+                        "exercise_id INTEGER PRIMARY KEY, " +
+                        "workout_id INTEGER, " +
+                        "exercise_name TEXT NOT NULL, " +
+                        "exercise_muscle_group TEXT NOT NULL," +
+                        "objective_name TEXT NOT NULL, " +
+                        "objective_value REAL NOT NULL, " +
+                        "objective_units TEXT NOT NULL, " +
+                        "goal_name TEXT NOT NULL, " +
+                        "goal_value REAL NOT NULL, " +
+                        "goal_units TEXT NOT NULL, " +
+                        "FOREIGN KEY(workout_id) REFERENCES workouts(workout_id)" +
+                        ");";
+
+        String sqlCreateHistoryTableSmt =
+                "CREATE TABLE IF NOT EXISTS history" +
+                        "(" +
+                        "history_id INTEGER PRIMARY KEY, " +
+                        "exercise_id INTEGER NOT NULL, " +
+                        "goal_value REAL NOT NULL, " +
+                        "goal_units TEXT NOT NULL, " +
+                        "FOREIGN KEY(exercise_id) REFERENCES exercises(exercise_id)" +
                         ");";
 
         String sqlCreateWorkoutTableStmt =
-                "CREATE TABLE IF NOT EXISTS WorkoutTable " +
+                "CREATE TABLE IF NOT EXISTS workouts " +
                         "(" +
-                        "id TEXT NOT NULL UNIQUE, " +
-                        "name TEXT NOT NULL, " +
-                        "muscleGroup TEXT NOT NULL, " +
-                        "PRIMARY KEY (id) " +
+                        "workout_id INTEGER PRIMARY KEY, " +
+                        "workout_name TEXT NOT NULL, " +
+                        "workout_muscle_group TEXT NOT NULL" +
                         ");";
 
+        DB.execSQL(sqlCreateExerciseTableStmt);
         DB.execSQL(sqlCreateExerciseTableStmt);
         DB.execSQL(sqlCreateWorkoutTableStmt);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase DB, int i, int i1) {
-        DB.execSQL("DROP TABLE IF EXISTS ExerciseTable");
-        DB.execSQL("DROP TABLE IF EXISTS WorkoutTable");
+        DB.execSQL("DROP TABLE IF EXISTS exercises");
+        DB.execSQL("DROP TABLE IF EXISTS history");
+        DB.execSQL("DROP TABLE IF EXISTS workouts");
     }
 
     public Cursor executeQuery(String query, String[] queryArgs) throws Exception {

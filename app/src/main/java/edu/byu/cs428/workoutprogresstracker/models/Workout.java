@@ -1,26 +1,21 @@
 package edu.byu.cs428.workoutprogresstracker.models;
 import java.util.List;
-import java.util.UUID;
 
 public class Workout {
-    UUID id;
-    String name;
-    List<Exercise> history;
-    String muscleGroup;
+    private final int id;
+    private String name;
+    private List<Exercise> history;
+    private String muscleGroup;
 
-    public Workout(UUID id, String name, List<Exercise> history, String muscleGroup){
+    public Workout(int id, String name, List<Exercise> history, String muscleGroup){
         this.id = id;
         this.name = name;
         this.history = history;
         this.muscleGroup = muscleGroup;
     }
 
-    public UUID getId() {
+    public int getId() {
         return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public String getName() {

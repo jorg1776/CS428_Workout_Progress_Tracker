@@ -1,7 +1,6 @@
 package edu.byu.cs428.workoutprogresstracker.services;
 
 import java.util.List;
-import java.util.UUID;
 
 import edu.byu.cs428.workoutprogresstracker.dao.DAOFactory;
 import edu.byu.cs428.workoutprogresstracker.dao.DataAccessException;
@@ -11,7 +10,7 @@ import edu.byu.cs428.workoutprogresstracker.models.Exercise;
 public class ExercisesService {
     private final ExercisesDAO exercisesDAO = DAOFactory.getExercisesDAO();
 
-    public Exercise loadExercise(UUID exerciseId) throws DataAccessException {
+    public Exercise loadExercise(int exerciseId) throws DataAccessException {
         return exercisesDAO.loadExercise(exerciseId);
     }
 
@@ -19,7 +18,7 @@ public class ExercisesService {
         exercisesDAO.saveExercise(exercise);
     }
 
-    public List<Exercise> loadExercisesList(String type, int count, UUID lastExercise) {
+    public List<Exercise> loadExercisesList(String type, int count, int lastExercise) {
         return exercisesDAO.loadExercisesList(type, count, lastExercise);
     }
 }
