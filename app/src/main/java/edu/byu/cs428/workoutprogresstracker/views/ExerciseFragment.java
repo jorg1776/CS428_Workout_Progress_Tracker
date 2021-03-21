@@ -27,12 +27,11 @@ import edu.byu.cs428.workoutprogresstracker.services.requests.ExercisesRequest;
 import edu.byu.cs428.workoutprogresstracker.services.responses.ExercisesResponse;
 import edu.byu.cs428.workoutprogresstracker.views.asyncTasks.ExerciseTask;
 
-public class ExerciseFragment extends Fragment {
+public class ExerciseFragment extends Fragment implements ExercisePresenter.View {
     private ExerciseRecyclerViewAdapter exerciseRecyclerViewAdapter;
     private static final int LOADING_DATA_VIEW = 0;
     private static final int ITEM_VIEW = 1;
     private static final String LOG_TAG = "ExerciseFragment";
-    View view;
     ExercisePresenter presenter;
 
     private static final int PAGE_SIZE = 10;
@@ -43,19 +42,19 @@ public class ExerciseFragment extends Fragment {
         //return inflater.inflate(R.layout.exercise_tab, container, false);
 
 
-        view = inflater.inflate(R.layout.exercise_tab, container, false);
+        View view = inflater.inflate(R.layout.exercise_tab, container, false);
 
-        presenter = new ExercisePresenter(view);
+        presenter = new ExercisePresenter(this);
 
         RecyclerView exerciseRecyclerView = view.findViewById(R.id.exerciseRecyclerView);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         exerciseRecyclerView.setLayoutManager(layoutManager);
 
-        exerciseRecyclerViewAdapter = new ExerciseRecyclerViewAdapter();
+        exerciseRecyclerViewAdapter = new ExerciseFragment.ExerciseRecyclerViewAdapter();
         exerciseRecyclerView.setAdapter(exerciseRecyclerViewAdapter);
 
-        exerciseRecyclerView.addOnScrollListener(new ExerciseRecyclerViewPaginationScrollListener(layoutManager));
+        exerciseRecyclerView.addOnScrollListener(new ExerciseFragment.ExerciseRecyclerViewPaginationScrollListener(layoutManager));
 
         Button addButton = view.findViewById(R.id.add_button);
 
@@ -90,7 +89,7 @@ public class ExerciseFragment extends Fragment {
                     public void onClick(View view) {
                         Toast.makeText(getContext(), "You selected '" + exerciseName.getText() + "'.", Toast.LENGTH_SHORT).show();
 
-                        //add code to open individual exercise stats
+                        //add code to open individual exercise stats view
                     }
                 });
             } else {
@@ -110,7 +109,7 @@ public class ExerciseFragment extends Fragment {
     /**
      * The adapter for the RecyclerView that displays the Exercises.
      */
-    private class ExerciseRecyclerViewAdapter extends RecyclerView.Adapter<ExerciseHolder> implements ExerciseTask.Observer {
+    private class ExerciseRecyclerViewAdapter extends RecyclerView.Adapter<ExerciseFragment.ExerciseHolder> implements ExerciseTask.Observer {
 
         private final List<Exercise> exercises = new ArrayList<>();
 
@@ -120,7 +119,7 @@ public class ExerciseFragment extends Fragment {
         private boolean isLoading = false;
 
         /**
-         * Creates an instance and loads the first page of following data.
+         * Creates an instance and loads the first page of exercise data.
          */
         ExerciseRecyclerViewAdapter() {
             loadMoreItems();
@@ -161,7 +160,7 @@ public class ExerciseFragment extends Fragment {
          */
         @NonNull
         @Override
-        public ExerciseHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public ExerciseFragment.ExerciseHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(ExerciseFragment.this.getContext());
             View view;
 
@@ -172,7 +171,7 @@ public class ExerciseFragment extends Fragment {
                 view = layoutInflater.inflate(R.layout.exercise_row, parent, false);
             }
 
-            return new ExerciseHolder(view, viewType);
+            return new ExerciseFragment.ExerciseHolder(view, viewType);
         }
 
         @Override
@@ -196,7 +195,7 @@ public class ExerciseFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return 0;
+            return exercises.size();
         }
 
         /**
@@ -212,8 +211,8 @@ public class ExerciseFragment extends Fragment {
             eTask.execute(request);
         }
 
-        //@Override
-        public void exercisesRetrieved(ExercisesResponse exercisesResponse) {
+        @Override
+        public void exerciseRetrieved(ExercisesResponse exercisesResponse) {
             List<Exercise> exercises = exercisesResponse.getExercises();
 
             lastExercise = (exercises.size() > 0) ? exercises.get(exercises.size() -1) : null;
@@ -222,11 +221,6 @@ public class ExerciseFragment extends Fragment {
             isLoading = false;
             removeLoadingFooter();
             exerciseRecyclerViewAdapter.addItems(exercises);
-        }
-
-        @Override
-        public void exerciseRetrieved(Exercise exercise) {
-
         }
 
         /**
@@ -242,15 +236,17 @@ public class ExerciseFragment extends Fragment {
         }
 
         /**
-         * Adds a dummy user to the list of users so the RecyclerView will display a view (the
+         * Adds a dummy exercise to the list of exercises so the RecyclerView will display a view (the
          * loading footer view) at the bottom of the list.
          */
         private void addLoadingFooter() {
-            addItem(new Exercise());
+            Exercise exercise = new Exercise();
+            exercise.setName("Dummy exercise");
+            addItem(exercise);
         }
 
         /**
-         * Removes the dummy user from the list of users so the RecyclerView will stop displaying
+         * Removes the dummy exercise from the list of exercises so the RecyclerView will stop displaying
          * the loading footer at the bottom of the list.
          */
         private void removeLoadingFooter() {

@@ -7,6 +7,7 @@ public class NewExerciseRequest {
 
     public NewExerciseRequest(String name, String metric, String muscleGroup) {
         this.name = name;
+        //metric will either be a string "time" or "weight"
         this.metric = metric;
         this.muscleGroup = muscleGroup;
     }

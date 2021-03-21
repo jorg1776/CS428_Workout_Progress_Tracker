@@ -15,7 +15,7 @@ public class ExerciseTask extends AsyncTask<ExercisesRequest, Void, ExercisesRes
     private Exception exception;
 
     public interface Observer {
-        void exerciseRetrieved(Exercise exercise);
+        void exerciseRetrieved(ExercisesResponse exercisesResponse);
         void handleException(Exception exception);
     }
 
@@ -38,11 +38,11 @@ public class ExerciseTask extends AsyncTask<ExercisesRequest, Void, ExercisesRes
     }
 
 
-    protected void onPostExecute(Exercise exercise) {
+    protected void onPostExecute(ExercisesResponse exercisesResponse) {
         if(exception != null) {
             observer.handleException(exception);
         } else {
-            observer.exerciseRetrieved(exercise);
+            observer.exerciseRetrieved(exercisesResponse);
         }
     }
 }
