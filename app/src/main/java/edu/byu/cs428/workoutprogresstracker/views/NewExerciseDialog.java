@@ -1,6 +1,5 @@
 package edu.byu.cs428.workoutprogresstracker.views;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.byu.cs428.workoutprogresstracker.R;
-import edu.byu.cs428.workoutprogresstracker.presenters.NewExercisePresenter;
-import edu.byu.cs428.workoutprogresstracker.services.requests.ExercisesRequest;
+import edu.byu.cs428.workoutprogresstracker.models.Exercise;
+import edu.byu.cs428.workoutprogresstracker.models.metric.Metric;
+import edu.byu.cs428.workoutprogresstracker.models.metric.TimeMetric;
+import edu.byu.cs428.workoutprogresstracker.models.metric.WeightMetric;
+import edu.byu.cs428.workoutprogresstracker.presenters.ExercisePresenter;
 import edu.byu.cs428.workoutprogresstracker.services.requests.NewExerciseRequest;
-import edu.byu.cs428.workoutprogresstracker.views.asyncTasks.ExerciseTask;
 import edu.byu.cs428.workoutprogresstracker.views.asyncTasks.NewExerciseTask;
 
 
@@ -73,15 +74,26 @@ public class NewExerciseDialog extends DialogFragment implements AdapterView.OnI
 
                 radioButton = (RadioButton) view.findViewById(selectedId);
                 metric = radioButton.getText().toString();
+                Metric objective;
+                if (metric.equals("Time")) {
+                    objective = new TimeMetric();
+                }
+                else {
+                    objective = new WeightMetric();
+                }
+                Exercise exercise = new Exercise();
+                exercise.setName(name);
+                exercise.setMuscleGroup(selectedMuscleGroup);
+                exercise.updateObjectiveMetric(objective);
 
-
-                NewExerciseRequest request = new NewExerciseRequest(name, metric, selectedMuscleGroup);
+                //NewExerciseRequest request = new NewExerciseRequest(name, metric, selectedMuscleGroup);
 
 
                 //save the created exercise
-                NewExercisePresenter presenter = new NewExercisePresenter(view);
-                NewExerciseTask eTask = new NewExerciseTask(presenter);
-                eTask.execute(request);
+                ExercisePresenter presenter = new ExercisePresenter(view);
+                presenter.saveExercise(exercise);
+                //NewExerciseTask eTask = new NewExerciseTask(presenter);
+                //eTask.execute(exercise);
 
                 getDialog().dismiss();
             }

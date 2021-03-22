@@ -21,6 +21,8 @@ public class Exercise {
         return history;
     }
 
+    public void setMuscleGroup(String muscleGroup) { this.muscleGroup = muscleGroup; }
+
     public String getMuscleGroup() {
         return muscleGroup;
     }

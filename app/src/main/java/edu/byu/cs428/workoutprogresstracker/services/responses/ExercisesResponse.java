@@ -13,6 +13,10 @@ public class ExercisesResponse {
         this.exercises = exercises;
     }
 
+    public ExercisesResponse(List<Exercise> exercises) {
+        this.exercises = exercises;
+    }
+
     public List<Exercise> getExercises() {
         return exercises;
     }

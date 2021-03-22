@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="0dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="500dp"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints">
+
+
+        <GridLayout
+            android:id="@+id/new_exercise_grid"
+            android:layout_width="500dp"
+            android:layout_height="180dp"
+            android:layout_centerHorizontal="true"
+            android:useDefaultMargins="false"
+            android:verticalSpacing="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints">
+
+
+            <TextView
+                android:id="@+id/new_workout_title"
+                android:layout_width="279dp"
+                android:layout_height="42dp"
+                android:layout_row="0"
+                android:layout_column="0"
+                android:layout_margin="0dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="40dp"
+                android:padding="0dp"
+                android:text="Enter workout name:"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="20dp" />
+
+            <EditText
+                android:id="@+id/workout_title_input"
+                android:layout_width="227dp"
+
+                android:layout_row="0"
+                android:layout_column="0"
+                android:layout_margin="0dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="85dp"
+                android:layout_weight="0"
+                android:inputType="text"
+                android:padding="6dp"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/muscle_group"
+                android:layout_width="279dp"
+                android:layout_height="42dp"
+                android:layout_row="1"
+                android:layout_column="0"
+                android:layout_margin="0dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="28dp"
+                android:padding="0dp"
+                android:text="Muscle group:"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="20sp" />
+
+        </GridLayout>
+
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:prompt="@string/spinner_title"/>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/exerciseRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:textAlignment="center"
+            tools:layout_editor_absoluteX="-16dp"
+            tools:layout_editor_absoluteY="16dp"
+            tools:ignore="MissingConstraints" />
+
+        <Button
+            android:id="@+id/create_button"
+            android:layout_width="157dp"
+            android:layout_height="38dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/basic_button"
+            android:text="@string/create"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.555"
+            app:layout_constraintVertical_bias="1.0"
+            tools:ignore="MissingConstraints" />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

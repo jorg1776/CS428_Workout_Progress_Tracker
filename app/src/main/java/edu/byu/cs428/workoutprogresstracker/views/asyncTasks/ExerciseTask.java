@@ -2,15 +2,12 @@ package edu.byu.cs428.workoutprogresstracker.views.asyncTasks;
 
 import android.os.AsyncTask;
 
-import java.io.IOException;
-
-import edu.byu.cs428.workoutprogresstracker.models.Exercise;
-import edu.byu.cs428.workoutprogresstracker.presenters.ExercisePresenter;
+import edu.byu.cs428.workoutprogresstracker.presenters.ExercisesListPresenter;
 import edu.byu.cs428.workoutprogresstracker.services.requests.ExercisesRequest;
 import edu.byu.cs428.workoutprogresstracker.services.responses.ExercisesResponse;
 
 public class ExerciseTask extends AsyncTask<ExercisesRequest, Void, ExercisesResponse> {
-    private final ExercisePresenter presenter;
+    private final ExercisesListPresenter presenter;
     private final Observer observer;
     private Exception exception;
 
@@ -19,7 +16,7 @@ public class ExerciseTask extends AsyncTask<ExercisesRequest, Void, ExercisesRes
         void handleException(Exception exception);
     }
 
-    public ExerciseTask(ExercisePresenter presenter, Observer observer) {
+    public ExerciseTask(ExercisesListPresenter presenter, Observer observer) {
         if(observer == null) {
             throw new NullPointerException();
         }
@@ -32,7 +29,7 @@ public class ExerciseTask extends AsyncTask<ExercisesRequest, Void, ExercisesRes
 
         ExercisesResponse response = null;
 
-        response = presenter.getExercise(exerciseRequests[0]);
+        response = presenter.loadExercises(exerciseRequests[0]);
 
         return response;
     }
