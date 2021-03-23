@@ -19,18 +19,20 @@ public class ExercisesListPresenter {
     public ExercisesListPresenter(){}
     public ExercisesResponse loadExercises(ExercisesRequest request){
         exercisesService = getExerciseService();
-        //return new ExercisesResponse(exercisesService.loadExercisesList(muscleGroup, count, lastExercise));
+        //return new ExercisesResponse(exercisesService.loadExercisesList(request.getMuscleGroup(), request.getCount(), request.getLastExercise()), false);
 
-        Exercise exercise1 = new Exercise();
-        exercise1.setName("exercise 1");
-        Exercise exercise2 = new Exercise();
-        exercise2.setName("exercise 2");
-        Exercise exercise3 = new Exercise();
-        exercise3.setName("exercise 3");
-        Exercise exercise4 = new Exercise();
-        exercise4.setName("exercise 4");
-        Exercise exercise5 = new Exercise();
-        exercise5.setName("exercise 5");
+
+        //mock data, can delete once connected to backend then uncomment return statement above
+        Exercise exercise1 = new Exercise("exercise 1", null, null, null, null);
+        exercise1.setId(1);
+        Exercise exercise2 = new Exercise("exercise 2", null, null, null, null);
+        exercise2.setId(2);
+        Exercise exercise3 = new Exercise("exercise 3", null, null, null, null);
+        exercise3.setId(3);
+        Exercise exercise4 = new Exercise("exercise 4", null, null, null, null);
+        exercise4.setId(4);
+        Exercise exercise5 = new Exercise("exercise 5", null, null, null, null);
+        exercise5.setId(5);
         ExercisesResponse response = new ExercisesResponse(Arrays.asList(exercise1, exercise2, exercise3, exercise4, exercise5), false);
         return response;
     }

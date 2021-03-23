@@ -19,6 +19,7 @@ import androidx.fragment.app.DialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import edu.byu.cs428.workoutprogresstracker.R;
 import edu.byu.cs428.workoutprogresstracker.models.Exercise;
@@ -26,8 +27,6 @@ import edu.byu.cs428.workoutprogresstracker.models.metric.Metric;
 import edu.byu.cs428.workoutprogresstracker.models.metric.TimeMetric;
 import edu.byu.cs428.workoutprogresstracker.models.metric.WeightMetric;
 import edu.byu.cs428.workoutprogresstracker.presenters.ExercisePresenter;
-import edu.byu.cs428.workoutprogresstracker.services.requests.NewExerciseRequest;
-import edu.byu.cs428.workoutprogresstracker.views.asyncTasks.NewExerciseTask;
 
 
 public class NewExerciseDialog extends DialogFragment implements AdapterView.OnItemSelectedListener {
@@ -81,19 +80,13 @@ public class NewExerciseDialog extends DialogFragment implements AdapterView.OnI
                 else {
                     objective = new WeightMetric();
                 }
-                Exercise exercise = new Exercise();
-                exercise.setName(name);
-                exercise.setMuscleGroup(selectedMuscleGroup);
-                exercise.updateObjectiveMetric(objective);
+                Exercise exercise = new Exercise(name, objective, null, null, selectedMuscleGroup);
 
-                //NewExerciseRequest request = new NewExerciseRequest(name, metric, selectedMuscleGroup);
 
 
                 //save the created exercise
-                ExercisePresenter presenter = new ExercisePresenter(view);
+                ExercisePresenter presenter = new ExercisePresenter();
                 presenter.saveExercise(exercise);
-                //NewExerciseTask eTask = new NewExerciseTask(presenter);
-                //eTask.execute(exercise);
 
                 getDialog().dismiss();
             }

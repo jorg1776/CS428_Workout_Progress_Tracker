@@ -1,19 +1,30 @@
 package edu.byu.cs428.workoutprogresstracker.models;
 
 import java.util.List;
-import java.util.UUID;
 
 import edu.byu.cs428.workoutprogresstracker.models.metric.Metric;
 
 public class Exercise {
-    UUID id;
-    String name;
-    Metric objective;
-    Metric goal;
-    List<History> history;
-    String muscleGroup;
+    private int id;
+    private String name;
+    private Metric objective;
+    private Metric goal;
+    private List<History> history;
+    private String muscleGroup;
 
-    public UUID getId() {
+    public Exercise(String name, Metric objective, Metric goal, List<History> history, String muscleGroup) {
+        this.name = name;
+        this.objective = objective;
+        this.goal = goal;
+        this.history = history;
+        this.muscleGroup = muscleGroup;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
         return id;
     }
 
@@ -25,10 +36,6 @@ public class Exercise {
 
     public String getMuscleGroup() {
         return muscleGroup;
-    }
-
-    public Exercise() {
-        this.id = UUID.randomUUID();
     }
 
     public String getName() {

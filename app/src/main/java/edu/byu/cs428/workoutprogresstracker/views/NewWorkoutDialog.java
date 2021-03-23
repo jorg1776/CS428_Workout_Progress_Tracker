@@ -33,6 +33,7 @@ import java.util.Objects;
 import edu.byu.cs428.workoutprogresstracker.R;
 import edu.byu.cs428.workoutprogresstracker.models.Exercise;
 import edu.byu.cs428.workoutprogresstracker.models.Workout;
+import edu.byu.cs428.workoutprogresstracker.presenters.ExercisePresenter;
 import edu.byu.cs428.workoutprogresstracker.presenters.ExercisesListPresenter;
 import edu.byu.cs428.workoutprogresstracker.presenters.WorkoutPresenter;
 import edu.byu.cs428.workoutprogresstracker.services.requests.ExercisesRequest;
@@ -47,16 +48,18 @@ public class NewWorkoutDialog extends DialogFragment implements AdapterView.OnIt
     private ExerciseRecyclerViewAdapter exerciseRecyclerViewAdapter;
     private static final int LOADING_DATA_VIEW = 0;
     private static final int ITEM_VIEW = 1;
-    ExercisesListPresenter ePresenter;
+    ExercisesListPresenter eListPresenter;
+    ExercisePresenter ePresenter;
     private static final String LOG_TAG = "WorkoutDialog";
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = 100;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.dialog_new_workout, container, false);
 
-        ePresenter = new ExercisesListPresenter();
+        eListPresenter = new ExercisesListPresenter();
+        ePresenter = new ExercisePresenter();
 
         Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
@@ -73,16 +76,12 @@ public class NewWorkoutDialog extends DialogFragment implements AdapterView.OnIt
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
 
-        //SET UP THE RECYLCER VIEW OF THE EXERCISE BASED ON SELECTED_MUSCLE_GROUP
-        //add each selected exercise to the list
+        //set up the recycler view of the exercises
         RecyclerView exerciseRecyclerView = view.findViewById(R.id.exerciseRecyclerView);
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         exerciseRecyclerView.setLayoutManager(layoutManager);
-
         exerciseRecyclerViewAdapter = new ExerciseRecyclerViewAdapter();
         exerciseRecyclerView.setAdapter(exerciseRecyclerViewAdapter);
-
         exerciseRecyclerView.addOnScrollListener(new ExerciseRecyclerViewPaginationScrollListener(layoutManager));
 
         workoutName = view.findViewById(R.id.workout_title_input);
@@ -98,7 +97,7 @@ public class NewWorkoutDialog extends DialogFragment implements AdapterView.OnIt
                     return;
                 }
                 //FIX THE INT BEING PASSED HERE
-                Workout workout = new Workout(1, name, null, selectedMuscleGroup);
+                Workout workout = new Workout(name, null, selectedMuscleGroup);
                 //save the created workout
                 WorkoutPresenter presenter = new WorkoutPresenter();
                 presenter.saveWorkout(workout);
@@ -119,31 +118,38 @@ public class NewWorkoutDialog extends DialogFragment implements AdapterView.OnIt
 
     }
 
+    //////////////////// EXERCISE RECYCLER METHODS ///////////////////////////////
+
     private class ExerciseHolder extends RecyclerView.ViewHolder {
 
         private final TextView exerciseName;
+        private final TextView exerciseID;
 
         ExerciseHolder(@NonNull final View itemView, int viewType) {
             super(itemView);
 
             if(viewType == ITEM_VIEW) {
                 exerciseName = itemView.findViewById(R.id.exercise_name);
+                exerciseID = itemView.findViewById(R.id.exercise_id);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @SuppressLint("UseCompatLoadingForDrawables")
                     @Override
                     public void onClick(View view) {
                         Toast.makeText(getContext(), "You selected '" + exerciseName.getText() + "'.", Toast.LENGTH_SHORT).show();
-                        //add selected exercise to workout
+                        //FIX! SHOW THAT AN EXERCISE HAS BEEN SELECTED/DESELECTED
 
                         //view.setBackground(getResources().getDrawable(R.drawable.exercise_background_selected));
+
                         //get the selected exercise
-                        //addedExercises.add();
+                        Exercise selectedExercise = ePresenter.loadExercise(Integer.parseInt(exerciseID.getText().toString()));
+                        addedExercises.add(selectedExercise);
 
                     }
                 });
             } else {
                 exerciseName = null;
+                exerciseID = null;
             }
         }
 
@@ -153,6 +159,7 @@ public class NewWorkoutDialog extends DialogFragment implements AdapterView.OnIt
          */
         void bindExercise(Exercise exercise) {
             exerciseName.setText(exercise.getName());
+            exerciseID.setText(String.valueOf(exercise.getId()));
         }
     }
 
@@ -256,11 +263,10 @@ public class NewWorkoutDialog extends DialogFragment implements AdapterView.OnIt
             isLoading = true;
             addLoadingFooter();
 
-            ExerciseTask eTask = new ExerciseTask(ePresenter, this);
-            //ExercisesRequest request = new ExercisesRequest(PAGE_SIZE, lastExercise);
-            ExercisesRequest request = new ExercisesRequest("abs", PAGE_SIZE, exercises.size() - 1);
+            ExerciseTask eTask = new ExerciseTask(eListPresenter, this);
+            ExercisesRequest request = new ExercisesRequest(selectedMuscleGroup, PAGE_SIZE, exercises.get(exercises.size() - 1).getId());
             eTask.execute(request);
-            //presenter.loadExercises(selectedMuscleGroup, getItemCount(), exercises.size() - 1);
+            //presenter.loadExercises(selectedMuscleGroup, PAGE_SIZE, exercises.get(exercises.size() - 1).getId());
             //presenter.loadExercises(request);
         }
 
@@ -294,8 +300,8 @@ public class NewWorkoutDialog extends DialogFragment implements AdapterView.OnIt
          * loading footer view) at the bottom of the list.
          */
         private void addLoadingFooter() {
-            Exercise exercise = new Exercise();
-            exercise.setName("Dummy exercise");
+            Exercise exercise = new Exercise("Dummy exercise", null, null,null, null);
+            exercise.setId(0);
             addItem(exercise);
         }
 

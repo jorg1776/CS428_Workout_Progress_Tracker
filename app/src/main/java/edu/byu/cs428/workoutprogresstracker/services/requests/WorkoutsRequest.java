@@ -3,19 +3,25 @@ package edu.byu.cs428.workoutprogresstracker.services.requests;
 import edu.byu.cs428.workoutprogresstracker.models.Workout;
 
 public class WorkoutsRequest {
-    private int limit;
-    private Workout lastWorkout;
+    private int count;
+    private int lastWorkout;
+    private String muscleGroup;
 
-    public WorkoutsRequest(int limit, Workout lastWorkout) {
-        this.limit = limit;
+    public WorkoutsRequest(String muscleGroup, int count, int lastWorkout) {
+        this.muscleGroup = muscleGroup;
+        this.count = count;
         this.lastWorkout = lastWorkout;
     }
 
-    public int getLimit() {
-        return limit;
+    public String getMuscleGroup() {
+        return muscleGroup;
     }
 
-    public Workout getLastWorkout() {
+    public int getCount() {
+        return count;
+    }
+
+    public int getLastWorkout() {
         return lastWorkout;
     }
 }
