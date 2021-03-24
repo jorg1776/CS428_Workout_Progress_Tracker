@@ -4,11 +4,18 @@ import java.util.List;
 
 import edu.byu.cs428.workoutprogresstracker.dao.DAOFactory;
 import edu.byu.cs428.workoutprogresstracker.dao.DataAccessException;
+import edu.byu.cs428.workoutprogresstracker.dao.ExerciseHistoryDAO;
 import edu.byu.cs428.workoutprogresstracker.dao.ExercisesDAO;
 import edu.byu.cs428.workoutprogresstracker.models.Exercise;
+import edu.byu.cs428.workoutprogresstracker.models.metric.Metric;
 
-public class ExercisesService {
+public class ExercisesService implements ExercisesDAO, ExerciseHistoryDAO {
     private final ExercisesDAO exercisesDAO = DAOFactory.getExercisesDAO();
+
+    @Override
+    public void createExercise(Exercise exercise) throws DataAccessException {
+        exercisesDAO.createExercise(exercise);
+    }
 
     public Exercise loadExercise(int exerciseId) throws DataAccessException {
         return exercisesDAO.loadExercise(exerciseId);
@@ -18,7 +25,23 @@ public class ExercisesService {
         exercisesDAO.saveExercise(exercise);
     }
 
-    public List<Exercise> loadExercisesList(String type, int count, int lastExercise) {
-        return exercisesDAO.loadExercisesList(type, count, lastExercise);
+    @Override
+    public void deleteExercise(int exerciseId) throws DataAccessException {
+        exercisesDAO.deleteExercise(exerciseId);
+    }
+
+    @Override
+    public List<Exercise> loadExercisesList(String muscleGroup) throws DataAccessException {
+        return exercisesDAO.loadExercisesList(muscleGroup);
+    }
+
+    @Override
+    public void addNewGoalReached(int exerciseId, Metric goal) throws DataAccessException {
+
+    }
+
+    @Override
+    public void getLastGoal(int exerciseId) throws DataAccessException {
+
     }
 }

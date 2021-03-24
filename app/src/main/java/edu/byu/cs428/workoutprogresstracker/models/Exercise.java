@@ -1,19 +1,20 @@
 package edu.byu.cs428.workoutprogresstracker.models;
 
 import java.util.List;
-import java.util.UUID;
 
 import edu.byu.cs428.workoutprogresstracker.models.metric.Metric;
 
 public class Exercise {
-    private int id;
+    private final int id;
     private String name;
     private Metric objective;
     private Metric goal;
     private List<History> history;
     private String muscleGroup;
 
-    public Exercise() {}
+    public Exercise() {
+        this.id = 0;
+    }
 
     public Exercise(int id, String name, Metric objective, Metric goal, List<History> history,
                     String muscleGroup){

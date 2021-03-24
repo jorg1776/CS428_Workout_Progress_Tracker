@@ -13,6 +13,20 @@ public class WorkoutsSQLiteDAO implements WorkoutsDAO {
     private final SQLiteDAO dao = new SQLiteDAO();
 
     @Override
+    public void createWorkout(Workout workout) throws DataAccessException {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("workout_name", workout.getName());
+        contentValues.put("workout_muscle_group", workout.getMuscleGroup());
+
+        try {
+            dao.executeInsert("workouts", contentValues);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new DataAccessException("ERROR: encountered while executing saveWorkout");
+        }
+    }
+
+    @Override
     public Workout loadWorkout(int workoutID) throws DataAccessException {
         Workout workout = null;
 
@@ -35,12 +49,11 @@ public class WorkoutsSQLiteDAO implements WorkoutsDAO {
     @Override
     public void saveWorkout(Workout workout) throws DataAccessException {
         ContentValues contentValues = new ContentValues();
-        contentValues.put("workout_id", workout.getId());
         contentValues.put("workout_name", workout.getName());
         contentValues.put("workout_muscle_group", workout.getMuscleGroup());
 
         try {
-            dao.executeInsert("workouts", contentValues);
+            dao.executeUpdate("workouts", contentValues, "workout_id=?", new String[]{Integer.toString(workout.getId())});
         } catch (Exception e) {
             e.printStackTrace();
             throw new DataAccessException("ERROR: encountered while executing saveWorkout");
@@ -48,7 +61,12 @@ public class WorkoutsSQLiteDAO implements WorkoutsDAO {
     }
 
     @Override
-    public List<Workout> loadWorkoutsList(String type, int count, int lastWorkout) {
+    public void deleteWorkout(int workoutId) throws DataAccessException {
+
+    }
+
+    @Override
+    public List<Workout> loadWorkoutsList(String type, int count, int lastWorkout) throws DataAccessException {
         return null;
     }
 }
