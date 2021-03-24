@@ -9,5 +9,5 @@ public interface WorkoutsDAO {
     Workout loadWorkout(int workoutId) throws DataAccessException;
     void saveWorkout(Workout workout) throws DataAccessException;
     void deleteWorkout(int workoutId) throws DataAccessException;
-    List<Workout> loadWorkoutsList(String type, int count, int lastWorkout) throws DataAccessException;
+    List<Workout> loadWorkoutsList(String muscleGroup, int count, int lastWorkout) throws DataAccessException;
 }

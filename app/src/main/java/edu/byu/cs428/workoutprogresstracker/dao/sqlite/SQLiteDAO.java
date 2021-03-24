@@ -54,7 +54,8 @@ public class SQLiteDAO extends SQLiteOpenHelper {
                 "CREATE TABLE IF NOT EXISTS workouts_exercises " +
                         "(" +
                         "workout_id INTEGER NOT NULL, " +
-                        "exercise_id INTEGER NOT NULL" +
+                        "exercise_id INTEGER NOT NULL, " +
+                        "exercise_name String NOT NULL" +
                         ");";
 
         DB.execSQL(sqlCreateExerciseTableStmt);

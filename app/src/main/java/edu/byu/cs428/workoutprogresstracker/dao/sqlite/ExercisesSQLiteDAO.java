@@ -132,7 +132,7 @@ public class ExercisesSQLiteDAO implements ExercisesDAO {
             return exercises;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new DataAccessException("ERROR: encountered while loading exercise");
+            throw new DataAccessException("ERROR: encountered while loading exercises");
         }
     }
 }
