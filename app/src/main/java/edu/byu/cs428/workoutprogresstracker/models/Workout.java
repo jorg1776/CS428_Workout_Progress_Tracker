@@ -2,6 +2,8 @@ package edu.byu.cs428.workoutprogresstracker.models;
 
 import java.util.List;
 
+import java.util.List;
+
 public class Workout {
     private int id;
     private String name;
@@ -21,6 +23,7 @@ public class Workout {
     public void setId(int id) {
         this.id = id;
     }
+
 
     public String getName() {
         return name;
@@ -45,6 +48,5 @@ public class Workout {
     public void setMuscleGroup(String muscleGroup) {
         this.muscleGroup = muscleGroup;
     }
-
 
 }

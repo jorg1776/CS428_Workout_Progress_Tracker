@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -25,7 +26,10 @@ import java.util.List;
 
 import edu.byu.cs428.workoutprogresstracker.R;
 import edu.byu.cs428.workoutprogresstracker.models.Exercise;
+
 import edu.byu.cs428.workoutprogresstracker.presenters.ExercisesListPresenter;
+import edu.byu.cs428.workoutprogresstracker.presenters.ExercisePresenter;
+
 import edu.byu.cs428.workoutprogresstracker.services.requests.ExercisesRequest;
 import edu.byu.cs428.workoutprogresstracker.services.responses.ExercisesResponse;
 import edu.byu.cs428.workoutprogresstracker.views.asyncTasks.ExerciseTask;

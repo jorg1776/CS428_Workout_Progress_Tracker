@@ -12,7 +12,11 @@ public class Exercise {
     private List<History> history;
     private String muscleGroup;
 
-    public Exercise(String name, Metric objective, Metric goal, List<History> history, String muscleGroup) {
+    public Exercise() {}
+
+    public Exercise(String name, Metric objective, Metric goal, List<History> history,
+                    String muscleGroup){
+
         this.name = name;
         this.objective = objective;
         this.goal = goal;
@@ -60,5 +64,13 @@ public class Exercise {
 
     public void updateGoalValue(Number value) {
         this.goal.updateValue(value);
+    }
+
+    public Metric getObjective() {
+        return objective;
+    }
+
+    public Metric getGoal() {
+        return goal;
     }
 }
