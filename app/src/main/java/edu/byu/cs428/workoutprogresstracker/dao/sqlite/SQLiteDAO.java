@@ -29,12 +29,11 @@ public class SQLiteDAO extends SQLiteOpenHelper {
                         "objective_units TEXT NOT NULL, " +
                         "goal_name TEXT NOT NULL, " +
                         "goal_value REAL NOT NULL, " +
-                        "goal_units TEXT NOT NULL, " +
-                        "FOREIGN KEY(workout_id) REFERENCES workouts(workout_id)" +
+                        "goal_units TEXT NOT NULL" +
                         ");";
 
-        String sqlCreateHistoryTableSmt =
-                "CREATE TABLE IF NOT EXISTS history" +
+        String sqlCreateExerciseHistoryTableSmt =
+                "CREATE TABLE IF NOT EXISTS exercise_history" +
                         "(" +
                         "history_id INTEGER PRIMARY KEY, " +
                         "exercise_id INTEGER NOT NULL, " +
@@ -51,9 +50,17 @@ public class SQLiteDAO extends SQLiteOpenHelper {
                         "workout_muscle_group TEXT NOT NULL" +
                         ");";
 
+        String sqlCreateWorkoutsExercisesTableStmt =
+                "CREATE TABLE IF NOT EXISTS workouts_exercises " +
+                        "(" +
+                        "workout_id INTEGER NOT NULL, " +
+                        "exercise_id INTEGER NOT NULL" +
+                        ");";
+
         DB.execSQL(sqlCreateExerciseTableStmt);
-        DB.execSQL(sqlCreateExerciseTableStmt);
+        DB.execSQL(sqlCreateExerciseHistoryTableSmt);
         DB.execSQL(sqlCreateWorkoutTableStmt);
+        DB.execSQL(sqlCreateWorkoutsExercisesTableStmt);
     }
 
     @Override
@@ -61,29 +68,34 @@ public class SQLiteDAO extends SQLiteOpenHelper {
         DB.execSQL("DROP TABLE IF EXISTS exercises");
         DB.execSQL("DROP TABLE IF EXISTS history");
         DB.execSQL("DROP TABLE IF EXISTS workouts");
+        DB.execSQL("DROP TABLE IF EXISTS workouts_exercises");
     }
 
     public Cursor executeQuery(String query, String[] queryArgs) throws Exception {
         return DB.rawQuery(query, queryArgs);
     }
 
-    public long executeInsert(String table, ContentValues contentValues) throws Exception {
+    public void executeInsert(String table, ContentValues contentValues) throws Exception {
         long result = DB.insert(table, null, contentValues);
 
-        if(result == -1) {
+        if (result == -1) {
             throw new Exception();
         }
-
-        return result;
     }
 
-    public long executeUpdate(String table, ContentValues contentValues, String whereClause, String[] whereArgs) throws Exception {
-        long result = DB.update(table, contentValues, whereClause, whereArgs);
+    public void executeUpdate(String table, ContentValues contentValues, String whereClause, String[] whereArgs) throws Exception {
+        int result = DB.update(table, contentValues, whereClause, whereArgs);
 
-        if(result == -1) {
+        if (result == -1) {
             throw new Exception();
         }
+    }
 
-        return result;
+    public void executeDelete(String table, String whereClause, String[] whereArgs) throws Exception {
+        int result = DB.delete(table, whereClause, whereArgs);
+
+        if (result == -1) {
+            throw new Exception();
+        }
     }
 }

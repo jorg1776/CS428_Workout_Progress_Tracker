@@ -6,7 +6,8 @@ import edu.byu.cs428.workoutprogresstracker.models.Workout;
 
 public interface WorkoutsDAO {
     void createWorkout(Workout workout) throws DataAccessException;
-    Workout loadWorkout(int workoutID) throws DataAccessException;
+    Workout loadWorkout(int workoutId) throws DataAccessException;
     void saveWorkout(Workout workout) throws DataAccessException;
-    List<Workout> loadWorkoutsList(String type, int count, int lastWorkout);
+    void deleteWorkout(int workoutId) throws DataAccessException;
+    List<Workout> loadWorkoutsList(String type, int count, int lastWorkout) throws DataAccessException;
 }

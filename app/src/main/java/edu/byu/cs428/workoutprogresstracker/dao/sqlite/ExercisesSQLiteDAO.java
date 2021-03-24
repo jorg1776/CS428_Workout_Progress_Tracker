@@ -80,7 +80,25 @@ public class ExercisesSQLiteDAO implements ExercisesDAO {
     }
 
     @Override
-    public List<Exercise> loadExercisesList(String type, int count, int lastExercise) {
+    public void deleteExercise(int exerciseId) throws DataAccessException {
+
+    }
+
+    @Override
+    public List<Exercise> loadExercisesList(String muscleGroup) throws DataAccessException {
+        try {
+            if (muscleGroup == null) {
+                muscleGroup = "exercise_muscle_group";
+            }
+
+            Cursor cursor = dao.executeQuery("SELECT * FROM exercises WHERE exercise_muscle_group = ?", new String[]{ muscleGroup });
+
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new DataAccessException("ERROR: encountered while loading exercise");
+        }
+
         return null;
     }
 }

@@ -61,7 +61,12 @@ public class WorkoutsSQLiteDAO implements WorkoutsDAO {
     }
 
     @Override
-    public List<Workout> loadWorkoutsList(String type, int count, int lastWorkout) {
+    public void deleteWorkout(int workoutId) throws DataAccessException {
+
+    }
+
+    @Override
+    public List<Workout> loadWorkoutsList(String type, int count, int lastWorkout) throws DataAccessException {
         return null;
     }
 }
