@@ -144,6 +144,7 @@ public class NewWorkoutDialog extends DialogFragment implements AdapterView.OnIt
                         //get the selected exercise
                         Exercise selectedExercise = ePresenter.loadExercise(Integer.parseInt(exerciseID.getText().toString()));
                         addedExercises.add(selectedExercise);
+                        
 
                     }
                 });
