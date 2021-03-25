@@ -6,8 +6,17 @@ import java.util.Date;
 import edu.byu.cs428.workoutprogresstracker.models.metric.Metric;
 
 public class History {
-    Metric goal;
-    Date timestamp;
+    private Metric goal;
+    private Date timestamp;
+
+    public History(Metric goal) {
+        this.goal = goal;
+    }
+
+    public History(Metric goal, Date timestamp) {
+        this.goal = goal;
+        this.timestamp = timestamp;
+    }
 
     public Metric getGoal() {
         return goal;

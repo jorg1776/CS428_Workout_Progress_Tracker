@@ -37,8 +37,10 @@ public class SQLiteDAO extends SQLiteOpenHelper {
                         "(" +
                         "history_id INTEGER PRIMARY KEY, " +
                         "exercise_id INTEGER NOT NULL, " +
+                        "goal_name TEXT NOT NULL, " +
                         "goal_value REAL NOT NULL, " +
                         "goal_units TEXT NOT NULL, " +
+                        "timestamp INTEGER NOT NULL, " +
                         "FOREIGN KEY(exercise_id) REFERENCES exercises(exercise_id)" +
                         ");";
 
