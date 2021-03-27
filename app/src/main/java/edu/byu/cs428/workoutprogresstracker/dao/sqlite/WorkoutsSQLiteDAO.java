@@ -77,7 +77,7 @@ public class WorkoutsSQLiteDAO implements WorkoutsDAO {
                 muscleGroup = "workout_muscle_group";
             }
 
-            Cursor cursor = dao.executeQuery("SELECT * FROM workouts WHERE workout_muscle_group = ?", new String[]{ muscleGroup });
+            Cursor cursor = dao.executeQuery("SELECT * FROM workouts WHERE workout_muscle_group=?", new String[]{ muscleGroup });
 
             while (cursor.moveToNext()) {
                 int workoutId = cursor.getInt(cursor.getColumnIndex("workout_id"));

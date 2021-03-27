@@ -41,8 +41,8 @@ public class WorkoutsService implements WorkoutsDAO, WorkoutsExercisesDAO {
     }
 
     @Override
-    public void addExerciseToWorkout(int exerciseId, int workoutId) throws DataAccessException {
-        workoutsExercisesDAO.addExerciseToWorkout(exerciseId, workoutId);
+    public void addExerciseToWorkout(Exercise exercise, int workoutId) throws DataAccessException {
+        workoutsExercisesDAO.addExerciseToWorkout(exercise, workoutId);
     }
 
     @Override
