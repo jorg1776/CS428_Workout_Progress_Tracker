@@ -3,6 +3,7 @@ package edu.byu.cs428.workoutprogresstracker.dao.sqlite;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.byu.cs428.workoutprogresstracker.dao.DataAccessException;
@@ -28,18 +29,16 @@ public class WorkoutsSQLiteDAO implements WorkoutsDAO {
 
     @Override
     public Workout loadWorkout(int workoutID) throws DataAccessException {
-        Workout workout = null;
-
         try {
             Cursor cursor = dao.executeQuery("SELECT * FROM workouts WHERE workout_id = ?", new String[]{Integer.toString(workoutID)});
 
             if (cursor.getCount() > 0) {
                 String name = cursor.getString(cursor.getColumnIndex("workout_name"));
                 String muscleGroup = cursor.getString(cursor.getColumnIndex("workout_muscle_group"));
-                workout = new Workout(workoutID, name, null, muscleGroup);
+                return new Workout(workoutID, name, muscleGroup);
             }
 
-            return workout;
+            throw new DataAccessException("Workout not found");
         } catch (Exception e) {
             e.printStackTrace();
             throw new DataAccessException("ERROR: encountered while executing loadWorkout");
@@ -62,11 +61,34 @@ public class WorkoutsSQLiteDAO implements WorkoutsDAO {
 
     @Override
     public void deleteWorkout(int workoutId) throws DataAccessException {
-
+        try {
+            dao.executeDelete("workouts", "workout_id=?", new String[]{ Integer.toString(workoutId) });
+        } catch (Exception e) {
+            throw new DataAccessException("ERROR: encountered while deleting workout");
+        }
     }
 
     @Override
-    public List<Workout> loadWorkoutsList(String type, int count, int lastWorkout) throws DataAccessException {
-        return null;
+    public List<Workout> loadWorkoutsList(String muscleGroup, int count, int lastWorkout) throws DataAccessException {
+        try {
+            List<Workout> workouts = new ArrayList<>();
+
+            if (muscleGroup == null) {
+                muscleGroup = "workout_muscle_group";
+            }
+
+            Cursor cursor = dao.executeQuery("SELECT * FROM workouts WHERE workout_muscle_group = ?", new String[]{ muscleGroup });
+
+            while (cursor.moveToNext()) {
+                int workoutId = cursor.getInt(cursor.getColumnIndex("workout_id"));
+                String name = cursor.getString(cursor.getColumnIndex("workout_name"));
+                workouts.add(new Workout(workoutId, name, muscleGroup));
+            }
+
+            return workouts;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new DataAccessException("ERROR: encountered while loading workouts");
+        }
     }
 }

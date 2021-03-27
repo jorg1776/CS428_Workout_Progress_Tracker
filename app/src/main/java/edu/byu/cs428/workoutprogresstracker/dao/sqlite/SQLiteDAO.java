@@ -37,8 +37,10 @@ public class SQLiteDAO extends SQLiteOpenHelper {
                         "(" +
                         "history_id INTEGER PRIMARY KEY, " +
                         "exercise_id INTEGER NOT NULL, " +
+                        "goal_name TEXT NOT NULL, " +
                         "goal_value REAL NOT NULL, " +
                         "goal_units TEXT NOT NULL, " +
+                        "timestamp INTEGER NOT NULL, " +
                         "FOREIGN KEY(exercise_id) REFERENCES exercises(exercise_id)" +
                         ");";
 
@@ -54,7 +56,8 @@ public class SQLiteDAO extends SQLiteOpenHelper {
                 "CREATE TABLE IF NOT EXISTS workouts_exercises " +
                         "(" +
                         "workout_id INTEGER NOT NULL, " +
-                        "exercise_id INTEGER NOT NULL" +
+                        "exercise_id INTEGER NOT NULL, " +
+                        "exercise_name String NOT NULL" +
                         ");";
 
         DB.execSQL(sqlCreateExerciseTableStmt);

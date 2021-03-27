@@ -3,8 +3,16 @@ package edu.byu.cs428.workoutprogresstracker.models.metric;
 public abstract class Metric {
     public String name;
     private Number value = 0;
-
     private String units;
+
+    public Metric(String name, Number value, String units) {
+        this.name = name;
+        this.value = value;
+        this.units = units;
+    }
+
+    public abstract String[] getPossibleUnits();
+
 
     public String getName() {
         return name;

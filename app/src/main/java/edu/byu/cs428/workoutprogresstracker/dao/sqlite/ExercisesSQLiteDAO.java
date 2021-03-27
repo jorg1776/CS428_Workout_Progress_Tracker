@@ -3,12 +3,15 @@ package edu.byu.cs428.workoutprogresstracker.dao.sqlite;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.byu.cs428.workoutprogresstracker.dao.DataAccessException;
 import edu.byu.cs428.workoutprogresstracker.dao.ExercisesDAO;
 import edu.byu.cs428.workoutprogresstracker.models.Exercise;
+import edu.byu.cs428.workoutprogresstracker.models.metric.InvalidMetricTypeException;
 import edu.byu.cs428.workoutprogresstracker.models.metric.Metric;
+import edu.byu.cs428.workoutprogresstracker.models.metric.MetricFactory;
 
 public class ExercisesSQLiteDAO implements ExercisesDAO {
     private final SQLiteDAO dao = new SQLiteDAO();
@@ -38,18 +41,38 @@ public class ExercisesSQLiteDAO implements ExercisesDAO {
 
     @Override
     public Exercise loadExercise(int exerciseID) throws DataAccessException {
-        Exercise exercise = null;
-
         try {
-            Cursor cursor = dao.executeQuery("SELECT * FROM exercises WHERE exercise_id = ?", new String[]{Integer.toString(exerciseID)});
+            Cursor cursor = dao.executeQuery("SELECT * FROM exercises WHERE exercise_id = ?", new String[]{ Integer.toString(exerciseID) });
 
             if (cursor.getCount() > 0) {
-                String name = cursor.getString(cursor.getColumnIndex("exercise_name"));
+                String exerciseName = cursor.getString(cursor.getColumnIndex("exercise_name"));
                 String muscleGroup = cursor.getString(cursor.getColumnIndex("exercise_muscle_group"));
-                exercise = new Exercise(exerciseID, name, null, null, null, muscleGroup);
+                String objectiveName = cursor.getString(cursor.getColumnIndex("objective_name"));
+                Double objectiveValue = cursor.getDouble(cursor.getColumnIndex("objective_value"));
+                String objectiveUnits = cursor.getString(cursor.getColumnIndex("objective_units"));
+                String goalName = cursor.getString(cursor.getColumnIndex("goal_name"));
+                Double goalValue = cursor.getDouble(cursor.getColumnIndex("goal_value"));
+                String goalUnits = cursor.getString(cursor.getColumnIndex("goal_units"));
+
+                Metric objective;
+                Metric goal;
+
+                try {
+                    objective = MetricFactory.createMetric(objectiveName, objectiveValue, objectiveUnits);
+                } catch (InvalidMetricTypeException e) {
+                    throw new DataAccessException(String.format("%s saved with invalid objective type", exerciseName));
+                }
+
+                try {
+                    goal = MetricFactory.createMetric(goalName, goalValue, goalUnits);
+                } catch (InvalidMetricTypeException e) {
+                    throw new DataAccessException(String.format("%s saved with invalid goal type", exerciseName));
+                }
+
+                return new Exercise(exerciseID, exerciseName, objective, goal, null, muscleGroup);
             }
 
-            return exercise;
+            throw new DataAccessException("Exercise not found");
         } catch (Exception e) {
             e.printStackTrace();
             throw new DataAccessException("ERROR: encountered while loading exercise");
@@ -72,7 +95,7 @@ public class ExercisesSQLiteDAO implements ExercisesDAO {
         contentValues.put("goal_units", goal.getUnits());
 
         try {
-            dao.executeUpdate("exercises", contentValues, "exercise_id=?", new String[]{Integer.toString(exercise.getId())});
+            dao.executeUpdate("exercises", contentValues, "exercise_id=?", new String[]{ Integer.toString(exercise.getId()) });
         } catch (Exception e) {
             e.printStackTrace();
             throw new DataAccessException("ERROR: encountered while saving exercise");
@@ -81,24 +104,35 @@ public class ExercisesSQLiteDAO implements ExercisesDAO {
 
     @Override
     public void deleteExercise(int exerciseId) throws DataAccessException {
-
+        try {
+            dao.executeDelete("exercises", "exercise_id=?", new String[]{ Integer.toString(exerciseId) });
+        } catch (Exception e) {
+            throw new DataAccessException("ERROR: encountered while deleting exercise");
+        }
     }
 
     @Override
     public List<Exercise> loadExercisesList(String muscleGroup) throws DataAccessException {
         try {
+            List<Exercise> exercises = new ArrayList<>();
+
             if (muscleGroup == null) {
                 muscleGroup = "exercise_muscle_group";
             }
 
             Cursor cursor = dao.executeQuery("SELECT * FROM exercises WHERE exercise_muscle_group = ?", new String[]{ muscleGroup });
 
-            
+            while (cursor.moveToNext()) {
+                int exerciseId = cursor.getInt(cursor.getColumnIndex("exercise_id"));
+                String exerciseName = cursor.getString(cursor.getColumnIndex("exercise_name"));
+
+                exercises.add(new Exercise(exerciseId, exerciseName));
+            }
+
+            return exercises;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new DataAccessException("ERROR: encountered while loading exercise");
+            throw new DataAccessException("ERROR: encountered while loading exercises");
         }
-
-        return null;
     }
 }

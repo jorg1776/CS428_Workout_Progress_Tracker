@@ -17,6 +17,8 @@ public class Exercise {
     }
 
     public Exercise(String name, Metric objective, Metric goal, List<History> history,
+
+    public Exercise(int id, String name, Metric objective, Metric goal, List<History> history,
                     String muscleGroup){
 
         this.name = name;

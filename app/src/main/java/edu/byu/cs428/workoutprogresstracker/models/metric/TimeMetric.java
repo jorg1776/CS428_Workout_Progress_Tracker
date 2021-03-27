@@ -1,19 +1,16 @@
 package edu.byu.cs428.workoutprogresstracker.models.metric;
 
-public class TimeMetric extends Metric{
-    Float value;
-    String units;
-
+public class TimeMetric extends Metric {
     public TimeMetric() {
-        this.name = "Time";
-        this.units = "min";
+        super("time", 0, "sec");
     }
 
-    String[] getPossibleUnits() {
-        return new String[]{"hr", "min", "sec"};
+    public TimeMetric(Double value, String units) {
+        super("time", value, units);
     }
 
-    public void setUnits(String units) {
-        this.units = units;
+    @Override
+    public String[] getPossibleUnits() {
+        return new String[]{ "hr", "min", "sec" };
     }
 }

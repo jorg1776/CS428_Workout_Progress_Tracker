@@ -2,24 +2,23 @@ package edu.byu.cs428.workoutprogresstracker.models;
 
 import java.util.List;
 
-import java.util.List;
 
 public class Workout {
     private int id;
     private String name;
-    private List<Exercise> history;
     private String muscleGroup;
+    private List<Exercise> exercises;
 
-    public Workout(String name, List<Exercise> history, String muscleGroup){
+    public Workout(String name, List<Exercise> exercises, String muscleGroup){
         this.name = name;
-        this.history = history;
+        this.exercises = exercises;
         this.muscleGroup = muscleGroup;
     }
 
-    public Workout(int id, String name, List<Exercise> history, String muscleGroup){
+
+    public Workout(int id, String name, String muscleGroup){
         this.id = id;
         this.name = name;
-        this.history = history;
         this.muscleGroup = muscleGroup;
     }
 
@@ -40,20 +39,20 @@ public class Workout {
         this.name = name;
     }
 
-    public List<Exercise> getHistory() {
-        return history;
-    }
-
-    public void setHistory(List<Exercise> history) {
-        this.history = history;
-    }
-
     public String getMuscleGroup() {
         return muscleGroup;
     }
 
     public void setMuscleGroup(String muscleGroup) {
         this.muscleGroup = muscleGroup;
+    }
+
+    public List<Exercise> getExercises() {
+        return exercises;
+    }
+
+    public void setExercises(List<Exercise> exercises) {
+        this.exercises = exercises;
     }
 
 }
