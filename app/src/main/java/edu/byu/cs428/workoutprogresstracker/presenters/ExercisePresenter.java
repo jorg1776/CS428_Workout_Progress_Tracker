@@ -11,7 +11,9 @@ public class ExercisePresenter {
 
     public Exercise loadExercise (int id) {
         //return service.loadExercise(id);
-        return null;
+        Exercise exercise1 = new Exercise("exercise 1", null, null, null, null);
+        exercise1.setId(1);
+        return exercise1;
     }
 
     public void saveExercise(Exercise exercise){

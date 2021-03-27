@@ -21,10 +21,11 @@ public class ExercisesListPresenter {
     public ExercisesResponse loadExercises(ExercisesRequest request) throws DataAccessException {
         exercisesService = getExerciseService();
         List<Exercise> exercises = exercisesService.loadExercisesList(request.getMuscleGroup());
+        /*
         if (exercises != null) {
-            return new ExercisesResponse(exercisesService.loadExercisesList(request.getMuscleGroup()/*, request.getCount(), request.getLastExercise())*/), false);
+            return new ExercisesResponse(exercisesService.loadExercisesList(request.getMuscleGroup()/*, request.getCount(), request.getLastExercise())*//*), false);
         }
-        else {
+        else {*/
             //mock data, can delete once connected to backend then uncomment return statement above
             Exercise exercise1 = new Exercise("exercise 1", null, null, null, null);
             exercise1.setId(1);
@@ -38,7 +39,7 @@ public class ExercisesListPresenter {
             exercise5.setId(5);
             ExercisesResponse response = new ExercisesResponse(Arrays.asList(exercise1, exercise2, exercise3, exercise4, exercise5), false);
             return response;
-        }
+        //}
     }
 
     ExercisesService getExerciseService() { return new ExercisesService(); }

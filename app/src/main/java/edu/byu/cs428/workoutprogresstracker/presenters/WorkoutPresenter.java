@@ -33,7 +33,9 @@ public class WorkoutPresenter {
         //service.saveWorkout(workout);
     }
 
-    public List<Exercise> loadExercises(int workoutId) {
+    public List<Exercise> getWorkoutExercises(int workoutId) throws DataAccessException {
+        //return service.getWorkoutExercises(workoutId);
+
         Exercise exercise1 = new Exercise("exercise 1", null, null, null, null);
         exercise1.setId(1);
         Exercise exercise2 = new Exercise("exercise 2", null, null, null, null);

@@ -1,6 +1,8 @@
 package edu.byu.cs428.workoutprogresstracker.views;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.byu.cs428.workoutprogresstracker.R;
+import edu.byu.cs428.workoutprogresstracker.dao.DataAccessException;
 import edu.byu.cs428.workoutprogresstracker.models.Exercise;
 import edu.byu.cs428.workoutprogresstracker.models.Workout;
 import edu.byu.cs428.workoutprogresstracker.presenters.WorkoutPresenter;
@@ -42,6 +46,7 @@ public class SelectedWorkoutDialog extends DialogFragment {
     private static final String LOG_TAG = "WorkoutDialog";
     WorkoutPresenter presenter;
     String selectedMuscleGroup;
+    List<Exercise> addedExercises;
 
     private static final int PAGE_SIZE = 30;
 
@@ -55,13 +60,18 @@ public class SelectedWorkoutDialog extends DialogFragment {
         selectedWorkout = wPresenter.loadWorkout(workoutId);
 
         presenter = new WorkoutPresenter();
+        addedExercises = new ArrayList<>();
 
         Button addButton = view.findViewById(R.id.add_button);
 
         RecyclerView exerciseRecyclerView = view.findViewById(R.id.exercisesRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         exerciseRecyclerView.setLayoutManager(layoutManager);
-        exerciseRecyclerViewAdapter = new ExerciseRecyclerViewAdapter();
+        try {
+            exerciseRecyclerViewAdapter = new ExerciseRecyclerViewAdapter();
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
         exerciseRecyclerView.setAdapter(exerciseRecyclerViewAdapter);
         exerciseRecyclerView.addOnScrollListener(new ExerciseRecyclerViewPaginationScrollListener(layoutManager));
 
@@ -70,6 +80,43 @@ public class SelectedWorkoutDialog extends DialogFragment {
 
         doneButton = view.findViewById(R.id.done_button);
         deleteButton = view.findViewById(R.id.delete_button);
+
+        workoutName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //nothing
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                selectedWorkout.setName(workoutName.getText().toString());
+                presenter.saveWorkout(selectedWorkout);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //nothing
+            }
+        });
+
+        doneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDialog().dismiss();
+            }
+        });
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    presenter.deleteWorkout(workoutId);
+                } catch (DataAccessException e) {
+                    e.printStackTrace();
+                }
+                getDialog().dismiss();
+            }
+        });
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,8 +129,13 @@ public class SelectedWorkoutDialog extends DialogFragment {
     }
 
     private void createAddExercisesBox () {
+
         AddExercisesDialog dialog = new AddExercisesDialog();
+        Bundle bundle = new Bundle();
+        bundle.putInt("workoutId", workoutId);
+        dialog.setArguments(bundle);
         dialog.show(getParentFragmentManager(), LOG_TAG);
+        getDialog().dismiss();
     }
 
 
@@ -142,7 +194,7 @@ public class SelectedWorkoutDialog extends DialogFragment {
         /**
          * Creates an instance and loads the first page of exercise data.
          */
-        ExerciseRecyclerViewAdapter() {
+        ExerciseRecyclerViewAdapter() throws DataAccessException {
             loadMoreItems();
         }
 
@@ -223,7 +275,7 @@ public class SelectedWorkoutDialog extends DialogFragment {
          * Causes the Adapter to display a loading footer and make a request to get more following
          * data.
          */
-        void loadMoreItems() {
+        void loadMoreItems() throws DataAccessException {
             isLoading = true;
             addLoadingFooter();
 
@@ -231,7 +283,7 @@ public class SelectedWorkoutDialog extends DialogFragment {
             //ExercisesRequest request = new ExercisesRequest("abs", PAGE_SIZE, exercises.get(exercises.size() - 1).getId());
             //eTask.execute(request);
 
-            List<Exercise> exercises = presenter.loadExercises(workoutId);
+            List<Exercise> exercises = presenter.getWorkoutExercises(workoutId);
             hasMorePages = false;
             isLoading = false;
             removeLoadingFooter();
@@ -322,7 +374,11 @@ public class SelectedWorkoutDialog extends DialogFragment {
             if (!exerciseRecyclerViewAdapter.isLoading && exerciseRecyclerViewAdapter.hasMorePages) {
                 if ((visibleItemCount + firstVisibleItemPosition) >=
                         totalItemCount && firstVisibleItemPosition >= 0) {
-                    exerciseRecyclerViewAdapter.loadMoreItems();
+                    try {
+                        exerciseRecyclerViewAdapter.loadMoreItems();
+                    } catch (DataAccessException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

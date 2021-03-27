@@ -25,14 +25,14 @@
 
         <Button
             android:id="@+id/add_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_gravity="center"
             android:layout_marginTop="15dp"
             android:background="@drawable/add_button"
             android:text="@string/plus"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="#000000"
+            android:textColor="#ffffff"
             android:textSize="30sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,14 +59,14 @@
         android:layout_marginBottom="10dp">
 
         <Button
-            android:id="@+id/done_button"
+            android:id="@+id/delete_button"
             android:layout_width="100dp"
             android:layout_height="38dp"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/basic_button"
-            android:backgroundTint="#d8d9f2"
+            android:backgroundTint="#6200ee"
             android:text="@string/delete"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="#FFFFFF"
@@ -78,7 +78,7 @@
             tools:ignore="MissingConstraints" />
 
         <Button
-            android:id="@+id/delete_button"
+            android:id="@+id/done_button"
             android:layout_width="100dp"
             android:layout_height="38dp"
             android:layout_gravity="center"
@@ -86,7 +86,7 @@
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:background="@drawable/basic_button"
-            android:backgroundTint="#d8d9f2"
+            android:backgroundTint="#6200ee"
             android:text="@string/done"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="#FFFFFF"
