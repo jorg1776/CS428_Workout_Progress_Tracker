@@ -3,6 +3,7 @@ package edu.byu.cs428.workoutprogresstracker.models.metric;
 public class DistanceMetric extends Metric{
     Float value;
     String units;
+    String name;
 
     public DistanceMetric() {
         this.name = "Distance";

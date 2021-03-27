@@ -16,6 +16,13 @@ public class Workout {
         this.muscleGroup = muscleGroup;
     }
 
+    public Workout(int id, String name, List<Exercise> history, String muscleGroup){
+        this.id = id;
+        this.name = name;
+        this.history = history;
+        this.muscleGroup = muscleGroup;
+    }
+
     public int getId() {
         return id;
     }

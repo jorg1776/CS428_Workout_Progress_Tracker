@@ -2,6 +2,7 @@ package edu.byu.cs428.workoutprogresstracker.views.asyncTasks;
 
 import android.os.AsyncTask;
 
+import edu.byu.cs428.workoutprogresstracker.dao.DataAccessException;
 import edu.byu.cs428.workoutprogresstracker.presenters.ExercisesListPresenter;
 import edu.byu.cs428.workoutprogresstracker.services.requests.ExercisesRequest;
 import edu.byu.cs428.workoutprogresstracker.services.responses.ExercisesResponse;
@@ -29,7 +30,11 @@ public class ExerciseTask extends AsyncTask<ExercisesRequest, Void, ExercisesRes
 
         ExercisesResponse response = null;
 
-        response = presenter.loadExercises(exerciseRequests[0]);
+        try {
+            response = presenter.loadExercises(exerciseRequests[0]);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
 
         return response;
     }

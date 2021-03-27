@@ -1,6 +1,7 @@
 package edu.byu.cs428.workoutprogresstracker.dao;
 
 import edu.byu.cs428.workoutprogresstracker.dao.sqlite.ExercisesSQLiteDAO;
+import edu.byu.cs428.workoutprogresstracker.dao.sqlite.WorkoutsExercisesSQLiteDAO;
 import edu.byu.cs428.workoutprogresstracker.dao.sqlite.WorkoutsSQLiteDAO;
 
 public class DAOFactory {
@@ -10,5 +11,9 @@ public class DAOFactory {
 
     public static WorkoutsDAO getWorkoutsDAO() {
         return new WorkoutsSQLiteDAO();
+    }
+
+    public static WorkoutsExercisesDAO getWorkoutsExercisesDAO() {
+        return new WorkoutsExercisesSQLiteDAO();
     }
 }

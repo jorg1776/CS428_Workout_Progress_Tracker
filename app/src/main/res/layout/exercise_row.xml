@@ -27,10 +27,12 @@
             android:layout_marginRight="10dp"
             tools:text="@string/exerciseName"/>
 
+
         <TextView
             android:id="@+id/exercise_id"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="invisible"/>
+
 
 </RelativeLayout>

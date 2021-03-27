@@ -1,8 +1,10 @@
 package edu.byu.cs428.workoutprogresstracker.models.metric;
 
 public abstract class Metric {
-    String name;
-    Number value = 0;
+    public String name;
+    private Number value = 0;
+
+    private String units;
 
     public String getName() {
         return name;
@@ -10,6 +12,14 @@ public abstract class Metric {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getUnits() {
+        return units;
+    }
+
+    public void setUnits(String units) {
+        this.units = units;
     }
 
     public Number getValue() {

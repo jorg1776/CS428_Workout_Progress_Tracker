@@ -21,12 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.byu.cs428.workoutprogresstracker.R;
-import edu.byu.cs428.workoutprogresstracker.models.Exercise;
 import edu.byu.cs428.workoutprogresstracker.models.Workout;
 import edu.byu.cs428.workoutprogresstracker.presenters.WorkoutsListPresenter;
-import edu.byu.cs428.workoutprogresstracker.services.requests.ExercisesRequest;
 import edu.byu.cs428.workoutprogresstracker.services.requests.WorkoutsRequest;
-import edu.byu.cs428.workoutprogresstracker.services.responses.ExercisesResponse;
 import edu.byu.cs428.workoutprogresstracker.services.responses.WorkoutsResponse;
 import edu.byu.cs428.workoutprogresstracker.views.asyncTasks.WorkoutTask;
 
@@ -56,7 +53,6 @@ public class WorkoutsFragment extends Fragment {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("click");
                 createWorkoutBox();
             }
         });
@@ -69,6 +65,14 @@ public class WorkoutsFragment extends Fragment {
         dialog.show(getParentFragmentManager(), LOG_TAG);
     }
 
+    private void createViewWorkoutBox (int workoutId) {
+        SelectedWorkoutDialog dialog = new SelectedWorkoutDialog();
+        Bundle bundle = new Bundle();
+        bundle.putInt("id", workoutId);
+        dialog.setArguments(bundle);
+        dialog.show(getParentFragmentManager(), LOG_TAG);
+    }
+
     //////////////////// WORKOUT RECYCLER METHODS ////////////////////////////////
 
     private class WorkoutHolder extends RecyclerView.ViewHolder {
@@ -77,7 +81,7 @@ public class WorkoutsFragment extends Fragment {
         private final TextView workoutMuscleGroup;
         private final TextView workoutID;
 
-        WorkoutHolder(@NonNull View itemView, int viewType) {
+        WorkoutHolder(@NonNull final View itemView, int viewType) {
             super(itemView);
 
             if(viewType == ITEM_VIEW) {
@@ -89,8 +93,7 @@ public class WorkoutsFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
                         Toast.makeText(getContext(), "You selected '" + workoutName.getText() + "'.", Toast.LENGTH_SHORT).show();
-
-                        //add code to open individual workout view i.e. list of all exercises
+                        createViewWorkoutBox(Integer.parseInt(workoutID.getText().toString()));
                     }
                 });
             } else {
