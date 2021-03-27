@@ -1,19 +1,16 @@
 package edu.byu.cs428.workoutprogresstracker.models.metric;
 
-public class DistanceMetric extends Metric{
-    Float value;
-    String units;
-
+public class DistanceMetric extends Metric {
     public DistanceMetric() {
-        this.name = "Distance";
-        this.units = "mi";
+        super("distance", 0, "mi");
     }
 
-    String[] getPossibleUnits() {
+    public DistanceMetric(Double value, String units) {
+        super("distance", value, units);
+    }
+
+    @Override
+    public String[] getPossibleUnits() {
         return new String[]{"mi", "km"};
-    }
-
-    public void setUnits(String units) {
-        this.units = units;
     }
 }

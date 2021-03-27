@@ -1,19 +1,16 @@
 package edu.byu.cs428.workoutprogresstracker.models.metric;
 
-public class WeightMetric extends Metric{
-    Float value;
-    String units;
-
+public class WeightMetric extends Metric {
     public WeightMetric() {
-        this.name = "Weight";
-        this.units = "lb";
+        super("weight", 0, "lb");
     }
 
-    String[] getPossibleUnits() {
+    public WeightMetric(Double value, String units) {
+        super("weight", value, units);
+    }
+
+    @Override
+    public String[] getPossibleUnits() {
         return new String[]{"lb", "kg"};
-    }
-
-    public void setUnits(String units) {
-        this.units = units;
     }
 }

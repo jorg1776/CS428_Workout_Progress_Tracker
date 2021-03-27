@@ -16,6 +16,11 @@ public class Exercise {
         this.id = 0;
     }
 
+    public Exercise(int id, String name){
+        this.id = id;
+        this.name = name;
+    }
+
     public Exercise(int id, String name, Metric objective, Metric goal, List<History> history,
                     String muscleGroup){
         this.id = id;
