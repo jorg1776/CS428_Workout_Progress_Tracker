@@ -14,7 +14,7 @@ import edu.byu.cs428.workoutprogresstracker.models.metric.Metric;
 import edu.byu.cs428.workoutprogresstracker.models.metric.MetricFactory;
 
 public class ExerciseHistorySQLiteDAO implements ExerciseHistoryDAO {
-    private final SQLiteDAO dao = new SQLiteDAO();
+    private final SQLiteDAO dao = SQLiteDAO.getInstance();
 
     @Override
     public List<History> getExerciseHistory(int exerciseId) throws DataAccessException {

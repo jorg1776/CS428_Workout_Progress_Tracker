@@ -12,13 +12,24 @@ public class Exercise {
     private List<History> history;
     private String muscleGroup;
 
-    public Exercise() {
-        this.id = 0;
-    }
-
-    public Exercise (int id, String name) {
+    public Exercise(int id, String name){
         this.id = id;
         this.name = name;
+    }
+
+    public Exercise(String name, Metric objective, Metric goal, String muscleGroup) {
+        this.name = name;
+        this.objective = objective;
+        this.goal = goal;
+        this.muscleGroup = muscleGroup;
+    }
+
+    public Exercise(int id, String name, Metric objective, Metric goal, String muscleGroup) {
+        this.id = id;
+        this.name = name;
+        this.objective = objective;
+        this.goal = goal;
+        this.muscleGroup = muscleGroup;
     }
 
     public Exercise(String name, Metric objective, Metric goal, List<History> history, String muscleGroup) {
@@ -29,7 +40,8 @@ public class Exercise {
         this.muscleGroup = muscleGroup;
     }
 
-    public Exercise(int id, String name, Metric objective, Metric goal, List<History> history, String muscleGroup) {
+    public Exercise(int id, String name, Metric objective, Metric goal, List<History> history,
+                    String muscleGroup) {
         this.id = id;
         this.name = name;
         this.objective = objective;
@@ -51,6 +63,10 @@ public class Exercise {
     }
 
     public void setMuscleGroup(String muscleGroup) { this.muscleGroup = muscleGroup; }
+
+    public void setHistory(List<History> history) {
+        this.history = history;
+    }
 
     public String getMuscleGroup() {
         return muscleGroup;

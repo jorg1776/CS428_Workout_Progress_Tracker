@@ -23,7 +23,9 @@ public class ExercisesService implements ExercisesDAO, ExerciseHistoryDAO {
     }
 
     public Exercise loadExercise(int exerciseId) throws DataAccessException {
-        return exercisesDAO.loadExercise(exerciseId);
+        Exercise exercise = exercisesDAO.loadExercise(exerciseId);
+        exercise.setHistory(getExerciseHistory(exerciseId));
+        return exercise;
     }
 
     public void saveExercise(Exercise exercise) throws DataAccessException {
