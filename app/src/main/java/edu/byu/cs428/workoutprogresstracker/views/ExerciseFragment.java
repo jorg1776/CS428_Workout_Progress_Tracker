@@ -40,7 +40,7 @@ public class ExerciseFragment extends Fragment implements AdapterView.OnItemSele
     private static final int ITEM_VIEW = 1;
     private static final String LOG_TAG = "ExerciseFragment";
     ExercisesListPresenter presenter;
-    String selectedMuscleGroup = "abs";
+    String selectedMuscleGroup = "All";
     RecyclerView exerciseRecyclerView;
 
     private static final int PAGE_SIZE = 100;
@@ -56,6 +56,7 @@ public class ExerciseFragment extends Fragment implements AdapterView.OnItemSele
         Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
         List<String> muscleGroups = new ArrayList<String>();
+        muscleGroups.add("All");
         muscleGroups.add("Abs");
         muscleGroups.add("Back");
         muscleGroups.add("Biceps");

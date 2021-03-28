@@ -2,6 +2,7 @@ package edu.byu.cs428.workoutprogresstracker.presenters;
 
 import java.util.Arrays;
 
+import edu.byu.cs428.workoutprogresstracker.dao.DataAccessException;
 import edu.byu.cs428.workoutprogresstracker.models.Exercise;
 import edu.byu.cs428.workoutprogresstracker.models.Workout;
 import edu.byu.cs428.workoutprogresstracker.services.ExercisesService;
@@ -19,12 +20,13 @@ public class WorkoutsListPresenter {
 
     public WorkoutsListPresenter(WorkoutsListPresenter.View view) {this.view = view;}
     public WorkoutsListPresenter(){}
-    public WorkoutsResponse loadWorkouts(WorkoutsRequest request){
+    public WorkoutsResponse loadWorkouts(WorkoutsRequest request) throws DataAccessException {
         workoutsService = getWorkoutsService();
-        //return new WorkoutsResponse(workoutsService.loadWorkoutsList(request.getMuscleGroup(), request.getCount(), request.getLastWorkout()), false);
+        return new WorkoutsResponse(workoutsService.loadWorkoutsList(request.getMuscleGroup(), request.getCount(), request.getLastWorkout()), false);
 
 
         //mock data, can delete once connected to backend then uncomment return statement above
+        /*
         Exercise exercise1 = new Exercise("exercise 1", null, null, null, null);
         exercise1.setId(1);
         Exercise exercise2 = new Exercise("exercise 2", null, null, null, null);
@@ -42,7 +44,7 @@ public class WorkoutsListPresenter {
         workout2.setId(1);
 
         WorkoutsResponse response = new WorkoutsResponse(Arrays.asList(workout1, workout2), false);
-        return response;
+        return response;*/
     }
 
     WorkoutsService getWorkoutsService() { return new WorkoutsService(); }

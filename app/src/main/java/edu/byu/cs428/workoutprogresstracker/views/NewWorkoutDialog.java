@@ -53,6 +53,7 @@ public class NewWorkoutDialog extends DialogFragment implements AdapterView.OnIt
     ExercisePresenter ePresenter;
     private static final String LOG_TAG = "WorkoutDialog";
     private static final int PAGE_SIZE = 100;
+    RecyclerView exerciseRecyclerView;
 
     @Nullable
     @Override
@@ -65,6 +66,7 @@ public class NewWorkoutDialog extends DialogFragment implements AdapterView.OnIt
         Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
         List<String> muscleGroups = new ArrayList<String>();
+        muscleGroups.add("All");
         muscleGroups.add("Abs");
         muscleGroups.add("Back");
         muscleGroups.add("Biceps");
@@ -78,7 +80,7 @@ public class NewWorkoutDialog extends DialogFragment implements AdapterView.OnIt
         spinner.setAdapter(dataAdapter);
 
         //set up the recycler view of the exercises
-        RecyclerView exerciseRecyclerView = view.findViewById(R.id.exerciseRecyclerView);
+        exerciseRecyclerView = view.findViewById(R.id.exerciseRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         exerciseRecyclerView.setLayoutManager(layoutManager);
         exerciseRecyclerViewAdapter = new ExerciseRecyclerViewAdapter();
@@ -98,7 +100,7 @@ public class NewWorkoutDialog extends DialogFragment implements AdapterView.OnIt
                     return;
                 }
                 //FIX THE INT BEING PASSED HERE
-                Workout workout = new Workout(name, null, selectedMuscleGroup);
+                Workout workout = new Workout(name, addedExercises, selectedMuscleGroup);
                 //save the created workout
                 WorkoutPresenter presenter = new WorkoutPresenter();
                 try {
@@ -116,6 +118,8 @@ public class NewWorkoutDialog extends DialogFragment implements AdapterView.OnIt
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         selectedMuscleGroup = parent.getItemAtPosition(position).toString();
+        exerciseRecyclerViewAdapter = new ExerciseRecyclerViewAdapter();
+        exerciseRecyclerView.setAdapter(exerciseRecyclerViewAdapter);
     }
 
     @Override
@@ -147,7 +151,12 @@ public class NewWorkoutDialog extends DialogFragment implements AdapterView.OnIt
                         //view.setBackground(getResources().getDrawable(R.drawable.exercise_background_selected));
 
                         //get the selected exercise
-                        Exercise selectedExercise = ePresenter.loadExercise(Integer.parseInt(exerciseID.getText().toString()));
+                        Exercise selectedExercise = null;
+                        try {
+                            selectedExercise = ePresenter.loadExercise(Integer.parseInt(exerciseID.getText().toString()));
+                        } catch (DataAccessException e) {
+                            e.printStackTrace();
+                        }
                         addedExercises.add(selectedExercise);
 
 

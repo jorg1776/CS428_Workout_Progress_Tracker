@@ -146,7 +146,12 @@ public class AddExercisesDialog extends DialogFragment implements AdapterView.On
                         //view.setBackground(getResources().getDrawable(R.drawable.exercise_background_selected));
 
                         //get the selected exercise
-                        Exercise selectedExercise = ePresenter.loadExercise(Integer.parseInt(exerciseID.getText().toString()));
+                        Exercise selectedExercise = null;
+                        try {
+                            selectedExercise = ePresenter.loadExercise(Integer.parseInt(exerciseID.getText().toString()));
+                        } catch (DataAccessException e) {
+                            e.printStackTrace();
+                        }
                         addedExercises.add(selectedExercise);
 
 

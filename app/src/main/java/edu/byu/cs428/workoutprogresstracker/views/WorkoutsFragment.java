@@ -5,7 +5,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,13 +30,15 @@ import edu.byu.cs428.workoutprogresstracker.services.requests.WorkoutsRequest;
 import edu.byu.cs428.workoutprogresstracker.services.responses.WorkoutsResponse;
 import edu.byu.cs428.workoutprogresstracker.views.asyncTasks.WorkoutTask;
 
-public class WorkoutsFragment extends Fragment {
+public class WorkoutsFragment extends Fragment implements AdapterView.OnItemSelectedListener{
     private WorkoutsRecyclerViewAdapter workoutsRecyclerViewAdapter;
     private static final int LOADING_DATA_VIEW = 0;
     private static final int ITEM_VIEW = 1;
     private static final String LOG_TAG = "WorkoutFragment";
     WorkoutsListPresenter presenter;
     private static final int PAGE_SIZE = 100;
+    String selectedMuscleGroup = "All";
+    RecyclerView workoutsRecyclerView;
 
     @Nullable
     @Override
@@ -42,7 +47,23 @@ public class WorkoutsFragment extends Fragment {
 
         presenter = new WorkoutsListPresenter();
 
-        RecyclerView workoutsRecyclerView = view.findViewById(R.id.workoutsRecyclerView);
+        Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
+        spinner.setOnItemSelectedListener(this);
+        List<String> muscleGroups = new ArrayList<String>();
+        muscleGroups.add("All");
+        muscleGroups.add("Abs");
+        muscleGroups.add("Back");
+        muscleGroups.add("Biceps");
+        muscleGroups.add("Cardio");
+        muscleGroups.add("Chest");
+        muscleGroups.add("Legs");
+        muscleGroups.add("Shoulders");
+        muscleGroups.add("Triceps");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, muscleGroups);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
+
+        workoutsRecyclerView = view.findViewById(R.id.workoutsRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         workoutsRecyclerView.setLayoutManager(layoutManager);
         workoutsRecyclerViewAdapter = new WorkoutsRecyclerViewAdapter();
@@ -58,6 +79,19 @@ public class WorkoutsFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        selectedMuscleGroup = parent.getItemAtPosition(position).toString();
+        workoutsRecyclerViewAdapter = new WorkoutsRecyclerViewAdapter();
+        workoutsRecyclerView.setAdapter(workoutsRecyclerViewAdapter);
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 
     private void createWorkoutBox () {
