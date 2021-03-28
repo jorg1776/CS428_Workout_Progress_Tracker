@@ -72,12 +72,14 @@ public class WorkoutsSQLiteDAO implements WorkoutsDAO {
     public List<Workout> loadWorkoutsList(String muscleGroup, int count, int lastWorkout) throws DataAccessException {
         try {
             List<Workout> workouts = new ArrayList<>();
+            Cursor cursor;
 
             if (muscleGroup.equals("All") || muscleGroup == null) {
-                muscleGroup = "workout_muscle_group";
+                cursor = dao.executeQuery("SELECT * FROM workouts", new String[]{});
             }
-
-            Cursor cursor = dao.executeQuery("SELECT * FROM workouts WHERE workout_muscle_group=?", new String[]{ muscleGroup });
+            else {
+                cursor = dao.executeQuery("SELECT * FROM workouts WHERE workout_muscle_group=?", new String[]{ muscleGroup });
+            }
 
             while (cursor.moveToNext()) {
                 int workoutId = cursor.getInt(cursor.getColumnIndex("workout_id"));
