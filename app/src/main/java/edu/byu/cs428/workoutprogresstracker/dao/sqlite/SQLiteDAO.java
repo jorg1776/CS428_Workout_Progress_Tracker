@@ -1,27 +1,47 @@
 package edu.byu.cs428.workoutprogresstracker.dao.sqlite;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import edu.byu.cs428.workoutprogresstracker.WorkoutProgressTracker;
+import java.util.ArrayList;
+
+import edu.byu.cs428.workoutprogresstracker.dao.DataAccessException;
+import edu.byu.cs428.workoutprogresstracker.models.Exercise;
+import edu.byu.cs428.workoutprogresstracker.models.History;
+import edu.byu.cs428.workoutprogresstracker.models.Workout;
+import edu.byu.cs428.workoutprogresstracker.models.metric.DistanceMetric;
+import edu.byu.cs428.workoutprogresstracker.models.metric.Metric;
+import edu.byu.cs428.workoutprogresstracker.models.metric.RepsMetric;
+import edu.byu.cs428.workoutprogresstracker.models.metric.TimeMetric;
+import edu.byu.cs428.workoutprogresstracker.models.metric.WeightMetric;
+import edu.byu.cs428.workoutprogresstracker.services.ExercisesService;
+import edu.byu.cs428.workoutprogresstracker.services.WorkoutsService;
 
 public class SQLiteDAO extends SQLiteOpenHelper {
-    private final SQLiteDatabase DB = this.getWritableDatabase();
+    private SQLiteDatabase DB;
+    private static SQLiteDAO instance;
 
-    public SQLiteDAO() {
-        super(WorkoutProgressTracker.getAppContext(), "Userdata.db", null, 1);
+    public SQLiteDAO(Context context) {
+        super(context, "Workouts.db", null, 1);
+        instance = this;
+        DB = this.getReadableDatabase();
+    }
+
+    public static SQLiteDAO getInstance() {
+        return instance;
     }
 
     @Override
     public void onCreate(SQLiteDatabase DB) {
+        System.out.println("Creating Database");
 
         String sqlCreateExerciseTableStmt =
                 "CREATE TABLE IF NOT EXISTS exercises " +
                         "(" +
                         "exercise_id INTEGER PRIMARY KEY, " +
-                        "workout_id INTEGER, " +
                         "exercise_name TEXT NOT NULL, " +
                         "exercise_muscle_group TEXT NOT NULL," +
                         "objective_name TEXT NOT NULL, " +
@@ -64,6 +84,54 @@ public class SQLiteDAO extends SQLiteOpenHelper {
         DB.execSQL(sqlCreateExerciseHistoryTableSmt);
         DB.execSQL(sqlCreateWorkoutTableStmt);
         DB.execSQL(sqlCreateWorkoutsExercisesTableStmt);
+
+        this.DB = DB;
+        addDummyData();
+    }
+
+    private void addDummyData() {
+        ExercisesService exercisesService = new ExercisesService();
+        WorkoutsService workoutsService = new WorkoutsService();
+
+        Metric benchObjective = new RepsMetric(10);
+        Metric benchGoal = new WeightMetric(155d, "lb");
+        Exercise benchPress = new Exercise(1, "Bench Press", benchObjective, benchGoal, "chest");
+
+        Metric inclinedBenchObjective = new RepsMetric(10);
+        Metric inclinedBenchGoal = new WeightMetric(135d, "lb");
+        Exercise inclinedBenchPress = new Exercise(2, "Inclined Bench Press", inclinedBenchObjective, inclinedBenchGoal, "chest");
+
+        Workout chestWorkout = new Workout(1, "Chest", "chest");
+
+
+        Metric mileRunObjective = new DistanceMetric(1d, "mi");
+        Metric mileRunGoal = new TimeMetric(9d, "min");
+        Exercise mileRun = new Exercise(3, "Mile Run", mileRunObjective, mileRunGoal, "cardio");
+
+        Metric sprintObjective = new DistanceMetric(100d, "m");
+        Metric sprintGoal = new TimeMetric(13d, "sec");
+        Exercise sprint = new Exercise(4, "100m Sprint", sprintObjective, sprintGoal, "cardio");
+
+        Workout cardioWorkout = new Workout(2, "Cardio", "cardio");
+
+
+        try {
+            exercisesService.createExercise(benchPress);
+            exercisesService.createExercise(inclinedBenchPress);
+            exercisesService.createExercise(mileRun);
+            exercisesService.createExercise(sprint);
+
+            workoutsService.createWorkout(chestWorkout);
+            workoutsService.createWorkout(cardioWorkout);
+
+            workoutsService.addExerciseToWorkout(benchPress, chestWorkout.getId());
+            workoutsService.addExerciseToWorkout(inclinedBenchPress, chestWorkout.getId());
+
+            workoutsService.addExerciseToWorkout(mileRun, cardioWorkout.getId());
+            workoutsService.addExerciseToWorkout(sprint, cardioWorkout.getId());
+        } catch (DataAccessException e) {
+            System.err.println(e);
+        }
     }
 
     @Override

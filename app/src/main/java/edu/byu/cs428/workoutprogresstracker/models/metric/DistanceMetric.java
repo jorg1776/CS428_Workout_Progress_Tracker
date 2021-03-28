@@ -11,6 +11,6 @@ public class DistanceMetric extends Metric {
 
     @Override
     public String[] getPossibleUnits() {
-        return new String[]{"mi", "km"};
+        return new String[]{"mi", "km", "m"};
     }
 }
