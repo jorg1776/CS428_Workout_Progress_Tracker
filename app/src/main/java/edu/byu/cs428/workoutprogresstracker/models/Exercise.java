@@ -5,24 +5,35 @@ import java.util.List;
 import edu.byu.cs428.workoutprogresstracker.models.metric.Metric;
 
 public class Exercise {
-    private final int id;
+    private int id;
     private String name;
     private Metric objective;
     private Metric goal;
     private List<History> history;
     private String muscleGroup;
 
-    public Exercise() {
-        this.id = 0;
-    }
-
     public Exercise(int id, String name){
         this.id = id;
         this.name = name;
     }
 
+    public Exercise(String name, Metric objective, Metric goal, String muscleGroup) {
+        this.name = name;
+        this.objective = objective;
+        this.goal = goal;
+        this.muscleGroup = muscleGroup;
+    }
+
+    public Exercise(int id, String name, Metric objective, Metric goal, String muscleGroup) {
+        this.id = id;
+        this.name = name;
+        this.objective = objective;
+        this.goal = goal;
+        this.muscleGroup = muscleGroup;
+    }
+
     public Exercise(int id, String name, Metric objective, Metric goal, List<History> history,
-                    String muscleGroup){
+                    String muscleGroup) {
         this.id = id;
         this.name = name;
         this.objective = objective;
@@ -37,6 +48,10 @@ public class Exercise {
 
     public List<History> getHistory() {
         return history;
+    }
+
+    public void setHistory(List<History> history) {
+        this.history = history;
     }
 
     public String getMuscleGroup() {

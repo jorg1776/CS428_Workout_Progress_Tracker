@@ -11,7 +11,7 @@ import edu.byu.cs428.workoutprogresstracker.dao.WorkoutsDAO;
 import edu.byu.cs428.workoutprogresstracker.models.Workout;
 
 public class WorkoutsSQLiteDAO implements WorkoutsDAO {
-    private final SQLiteDAO dao = new SQLiteDAO();
+    private final SQLiteDAO dao = SQLiteDAO.getInstance();
 
     @Override
     public void createWorkout(Workout workout) throws DataAccessException {
