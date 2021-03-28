@@ -30,7 +30,7 @@ public class WorkoutsSQLiteDAO implements WorkoutsDAO {
     @Override
     public Workout loadWorkout(int workoutID) throws DataAccessException {
         try {
-            Cursor cursor = dao.executeQuery("SELECT * FROM workouts WHERE workout_id = ?", new String[]{Integer.toString(workoutID)});
+            Cursor cursor = dao.executeQuery("SELECT * FROM workouts WHERE workout_id=?", new String[]{Integer.toString(workoutID)});
 
             if (cursor.getCount() > 0) {
                 String name = cursor.getString(cursor.getColumnIndex("workout_name"));
@@ -73,7 +73,7 @@ public class WorkoutsSQLiteDAO implements WorkoutsDAO {
         try {
             List<Workout> workouts = new ArrayList<>();
 
-            if (muscleGroup == null) {
+            if (muscleGroup.equals("All") || muscleGroup == null) {
                 muscleGroup = "workout_muscle_group";
             }
 
