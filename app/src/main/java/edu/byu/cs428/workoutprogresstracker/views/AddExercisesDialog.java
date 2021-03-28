@@ -47,7 +47,7 @@ public class AddExercisesDialog extends DialogFragment implements AdapterView.On
     private static final int PAGE_SIZE = 100;
     private int workoutId;
 
-    private List<Integer> addedExercises = new ArrayList<>();
+    private List<Exercise> addedExercises = new ArrayList<>();
     Button doneButton;
     EditText workoutName;
 
@@ -147,7 +147,7 @@ public class AddExercisesDialog extends DialogFragment implements AdapterView.On
 
                         //get the selected exercise
                         Exercise selectedExercise = ePresenter.loadExercise(Integer.parseInt(exerciseID.getText().toString()));
-                        addedExercises.add(selectedExercise.getId());
+                        addedExercises.add(selectedExercise);
 
 
                     }

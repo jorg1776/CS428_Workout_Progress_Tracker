@@ -49,8 +49,8 @@ public class WorkoutPresenter {
         return Arrays.asList(exercise1, exercise2, exercise3, exercise4, exercise5);
     }
 
-    public void addExercise(int exerciseId, int workoutId) throws DataAccessException {
-        service.addExerciseToWorkout(exerciseId, workoutId);
+    public void addExercise(Exercise exercise, int workoutId) throws DataAccessException {
+        service.addExerciseToWorkout(exercise, workoutId);
     }
 
     public void removeExercise(int exercise, int workout) throws DataAccessException {

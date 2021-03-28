@@ -40,7 +40,8 @@ public class ExerciseFragment extends Fragment implements AdapterView.OnItemSele
     private static final int ITEM_VIEW = 1;
     private static final String LOG_TAG = "ExerciseFragment";
     ExercisesListPresenter presenter;
-    String selectedMuscleGroup;
+    String selectedMuscleGroup = "abs";
+    RecyclerView exerciseRecyclerView;
 
     private static final int PAGE_SIZE = 100;
 
@@ -69,10 +70,10 @@ public class ExerciseFragment extends Fragment implements AdapterView.OnItemSele
 
         presenter = new ExercisesListPresenter();
 
-        RecyclerView exerciseRecyclerView = view.findViewById(R.id.exerciseRecyclerView);
+        exerciseRecyclerView = view.findViewById(R.id.exerciseRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         exerciseRecyclerView.setLayoutManager(layoutManager);
-        exerciseRecyclerViewAdapter = new ExerciseFragment.ExerciseRecyclerViewAdapter();
+        exerciseRecyclerViewAdapter = new ExerciseRecyclerViewAdapter();
         exerciseRecyclerView.setAdapter(exerciseRecyclerViewAdapter);
         exerciseRecyclerView.addOnScrollListener(new ExerciseRecyclerViewPaginationScrollListener(layoutManager));
 
@@ -97,6 +98,9 @@ public class ExerciseFragment extends Fragment implements AdapterView.OnItemSele
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         selectedMuscleGroup = parent.getItemAtPosition(position).toString();
+        exerciseRecyclerViewAdapter = new ExerciseRecyclerViewAdapter();
+        exerciseRecyclerView.setAdapter(exerciseRecyclerViewAdapter);
+
     }
 
     @Override
@@ -247,7 +251,7 @@ public class ExerciseFragment extends Fragment implements AdapterView.OnItemSele
 
             ExerciseTask eTask = new ExerciseTask(presenter, this);
             //ExercisesRequest request = new ExercisesRequest(PAGE_SIZE, lastExercise);
-            ExercisesRequest request = new ExercisesRequest("abs", PAGE_SIZE, exercises.get(exercises.size() - 1).getId());
+            ExercisesRequest request = new ExercisesRequest(selectedMuscleGroup, PAGE_SIZE, exercises.get(exercises.size() - 1).getId());
             eTask.execute(request);
             //presenter.loadExercises(selectedMuscleGroup, getItemCount(), exercises.size() - 1);
             //presenter.loadExercises(request);
