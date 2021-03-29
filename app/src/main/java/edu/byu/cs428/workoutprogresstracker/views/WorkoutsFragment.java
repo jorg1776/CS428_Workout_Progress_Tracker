@@ -252,7 +252,7 @@ public class WorkoutsFragment extends Fragment implements AdapterView.OnItemSele
 
             WorkoutTask wTask = new WorkoutTask(presenter, this);
             //ExercisesRequest request = new ExercisesRequest(PAGE_SIZE, lastExercise);
-            WorkoutsRequest request = new WorkoutsRequest("abs", PAGE_SIZE, workouts.get(workouts.size() - 1).getId());
+            WorkoutsRequest request = new WorkoutsRequest(selectedMuscleGroup, PAGE_SIZE, workouts.get(workouts.size() - 1).getId());
             wTask.execute(request);
             //presenter.loadExercises(selectedMuscleGroup, getItemCount(), exercises.size() - 1);
             //presenter.loadExercises(request);

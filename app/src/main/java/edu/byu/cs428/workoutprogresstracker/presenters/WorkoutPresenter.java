@@ -17,16 +17,16 @@ public class WorkoutPresenter {
         service.createWorkout(workout);
     }
 
-    public Workout loadWorkout (int id) {
-        //return service.loadWorkout(id);
-
+    public Workout loadWorkout (int id) throws DataAccessException {
+        return service.loadWorkout(id);
+    /*
         Exercise exercise1 = new Exercise("exercise 1", null, null, null, null);
         exercise1.setId(1);
         Exercise exercise2 = new Exercise("exercise 2", null, null, null, null);
         exercise2.setId(2);
         Workout workout1 = new Workout("workout 1", Arrays.asList(exercise1, exercise2), "cardio");
         workout1.setId(0);
-        return workout1;
+        return workout1;*/
     }
 
     public void saveWorkout(Workout workout){
@@ -34,8 +34,8 @@ public class WorkoutPresenter {
     }
 
     public List<Exercise> getWorkoutExercises(int workoutId) throws DataAccessException {
-        //return service.getWorkoutExercises(workoutId);
-
+        return service.getWorkoutExercises(workoutId);
+        /*
         Exercise exercise1 = new Exercise("exercise 1", null, null, null, null);
         exercise1.setId(1);
         Exercise exercise2 = new Exercise("exercise 2", null, null, null, null);
@@ -46,7 +46,7 @@ public class WorkoutPresenter {
         exercise4.setId(4);
         Exercise exercise5 = new Exercise("exercise 5", null, null, null, null);
         exercise5.setId(5);
-        return Arrays.asList(exercise1, exercise2, exercise3, exercise4, exercise5);
+        return Arrays.asList(exercise1, exercise2, exercise3, exercise4, exercise5);*/
     }
 
     public void addExercise(Exercise exercise, int workoutId) throws DataAccessException {
