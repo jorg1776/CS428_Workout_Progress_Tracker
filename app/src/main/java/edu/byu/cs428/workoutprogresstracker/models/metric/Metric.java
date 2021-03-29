@@ -1,7 +1,7 @@
 package edu.byu.cs428.workoutprogresstracker.models.metric;
 
 public abstract class Metric {
-    private String name;
+    public String name;
     private Number value = 0;
     private String units;
 

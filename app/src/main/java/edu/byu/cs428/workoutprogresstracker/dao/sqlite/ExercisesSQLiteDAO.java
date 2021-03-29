@@ -42,9 +42,11 @@ public class ExercisesSQLiteDAO implements ExercisesDAO {
     @Override
     public Exercise loadExercise(int exerciseID) throws DataAccessException {
         try {
-            Cursor cursor = dao.executeQuery("SELECT * FROM exercises WHERE exercise_id = ?", new String[]{ Integer.toString(exerciseID) });
+            Cursor cursor = dao.executeQuery("SELECT * FROM exercises WHERE exercise_id=?", new String[]{ Integer.toString(exerciseID) });
 
             if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+
                 String exerciseName = cursor.getString(cursor.getColumnIndex("exercise_name"));
                 String muscleGroup = cursor.getString(cursor.getColumnIndex("exercise_muscle_group"));
                 String objectiveName = cursor.getString(cursor.getColumnIndex("objective_name"));
@@ -115,12 +117,14 @@ public class ExercisesSQLiteDAO implements ExercisesDAO {
     public List<Exercise> loadExercisesList(String muscleGroup) throws DataAccessException {
         try {
             List<Exercise> exercises = new ArrayList<>();
+            Cursor cursor;
 
-            if (muscleGroup == null) {
-                muscleGroup = "exercise_muscle_group";
+            if (muscleGroup.equals("All") || muscleGroup == null) {
+                cursor = dao.executeQuery("SELECT * FROM exercises", new String[]{});
             }
-
-            Cursor cursor = dao.executeQuery("SELECT * FROM exercises WHERE exercise_muscle_group = ?", new String[]{ muscleGroup });
+            else {
+                cursor = dao.executeQuery("SELECT * FROM exercises WHERE exercise_muscle_group=?", new String[]{ muscleGroup });
+            }
 
             while (cursor.moveToNext()) {
                 int exerciseId = cursor.getInt(cursor.getColumnIndex("exercise_id"));

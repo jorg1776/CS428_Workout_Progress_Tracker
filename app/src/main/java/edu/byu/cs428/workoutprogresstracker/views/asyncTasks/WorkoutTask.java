@@ -4,20 +4,23 @@ import android.os.AsyncTask;
 
 import edu.byu.cs428.workoutprogresstracker.dao.DataAccessException;
 import edu.byu.cs428.workoutprogresstracker.presenters.ExercisesListPresenter;
+import edu.byu.cs428.workoutprogresstracker.presenters.WorkoutsListPresenter;
 import edu.byu.cs428.workoutprogresstracker.services.requests.ExercisesRequest;
+import edu.byu.cs428.workoutprogresstracker.services.requests.WorkoutsRequest;
 import edu.byu.cs428.workoutprogresstracker.services.responses.ExercisesResponse;
+import edu.byu.cs428.workoutprogresstracker.services.responses.WorkoutsResponse;
 
-public class ExerciseTask extends AsyncTask<ExercisesRequest, Void, ExercisesResponse> {
-    private final ExercisesListPresenter presenter;
-    private final Observer observer;
+public class WorkoutTask extends AsyncTask<WorkoutsRequest, Void, WorkoutsResponse> {
+    private final WorkoutsListPresenter presenter;
+    private final WorkoutTask.Observer observer;
     private Exception exception;
 
     public interface Observer {
-        void exerciseRetrieved(ExercisesResponse exercisesResponse);
+        void workoutRetrieved(WorkoutsResponse workoutResponse);
         void handleException(Exception exception);
     }
 
-    public ExerciseTask(ExercisesListPresenter presenter, Observer observer) {
+    public WorkoutTask(WorkoutsListPresenter presenter, WorkoutTask.Observer observer) {
         if(observer == null) {
             throw new NullPointerException();
         }
@@ -26,12 +29,12 @@ public class ExerciseTask extends AsyncTask<ExercisesRequest, Void, ExercisesRes
     }
 
     @Override
-    protected ExercisesResponse doInBackground(ExercisesRequest... exerciseRequests) {
+    protected WorkoutsResponse doInBackground(WorkoutsRequest... workoutRequests) {
 
-        ExercisesResponse response = null;
+        WorkoutsResponse response = null;
 
         try {
-            response = presenter.loadExercises(exerciseRequests[0]);
+            response = presenter.loadWorkouts(workoutRequests[0]);
         } catch (DataAccessException e) {
             e.printStackTrace();
         }
@@ -40,11 +43,11 @@ public class ExerciseTask extends AsyncTask<ExercisesRequest, Void, ExercisesRes
     }
 
 
-    protected void onPostExecute(ExercisesResponse exercisesResponse) {
+    protected void onPostExecute(WorkoutsResponse workoutsResponse) {
         if(exception != null) {
             observer.handleException(exception);
         } else {
-            observer.exerciseRetrieved(exercisesResponse);
+            observer.workoutRetrieved(workoutsResponse);
         }
     }
 }

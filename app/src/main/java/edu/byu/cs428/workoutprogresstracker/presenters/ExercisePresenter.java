@@ -2,17 +2,24 @@ package edu.byu.cs428.workoutprogresstracker.presenters;
 
 import android.view.View;
 
+import edu.byu.cs428.workoutprogresstracker.dao.DataAccessException;
 import edu.byu.cs428.workoutprogresstracker.models.Exercise;
-import edu.byu.cs428.workoutprogresstracker.services.requests.ExercisesRequest;
-import edu.byu.cs428.workoutprogresstracker.services.responses.ExercisesResponse;
-import edu.byu.cs428.workoutprogresstracker.views.ExerciseFragment;
+import edu.byu.cs428.workoutprogresstracker.services.ExercisesService;
 
 public class ExercisePresenter {
-    public ExercisePresenter(View view) {
+    ExercisesService service = new ExercisesService();
+    public ExercisePresenter() {}
 
+    public Exercise loadExercise (int id) throws DataAccessException {
+        return service.loadExercise(id);
+        /*Exercise exercise1 = new Exercise("exercise 1", null, null, null, null);
+        exercise1.setId(1);
+        return exercise1;*/
     }
 
-    public ExercisesResponse getExercise(ExercisesRequest exerciseName){
-        return null;
+    public void saveExercise(Exercise exercise){
+        //service.saveExercise(exercise);
     }
+
+
 }

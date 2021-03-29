@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import edu.byu.cs428.workoutprogresstracker.dao.DataAccessException;
@@ -30,9 +31,11 @@ public class WorkoutsSQLiteDAO implements WorkoutsDAO {
     @Override
     public Workout loadWorkout(int workoutID) throws DataAccessException {
         try {
-            Cursor cursor = dao.executeQuery("SELECT * FROM workouts WHERE workout_id = ?", new String[]{Integer.toString(workoutID)});
+            Cursor cursor = dao.executeQuery("SELECT * FROM workouts WHERE workout_id=?", new String[]{Integer.toString(workoutID)});
 
             if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+
                 String name = cursor.getString(cursor.getColumnIndex("workout_name"));
                 String muscleGroup = cursor.getString(cursor.getColumnIndex("workout_muscle_group"));
                 return new Workout(workoutID, name, muscleGroup);
@@ -72,17 +75,20 @@ public class WorkoutsSQLiteDAO implements WorkoutsDAO {
     public List<Workout> loadWorkoutsList(String muscleGroup, int count, int lastWorkout) throws DataAccessException {
         try {
             List<Workout> workouts = new ArrayList<>();
+            Cursor cursor;
 
-            if (muscleGroup == null) {
-                muscleGroup = "workout_muscle_group";
+            if (muscleGroup.equals("All") || muscleGroup == null) {
+                cursor = dao.executeQuery("SELECT * FROM workouts", new String[]{});
             }
-
-            Cursor cursor = dao.executeQuery("SELECT * FROM workouts WHERE workout_muscle_group=?", new String[]{ muscleGroup });
+            else {
+                cursor = dao.executeQuery("SELECT * FROM workouts WHERE workout_muscle_group=?", new String[]{ muscleGroup });
+            }
 
             while (cursor.moveToNext()) {
                 int workoutId = cursor.getInt(cursor.getColumnIndex("workout_id"));
                 String name = cursor.getString(cursor.getColumnIndex("workout_name"));
-                workouts.add(new Workout(workoutId, name, muscleGroup));
+                String workoutMuscleGroup = cursor.getString(cursor.getColumnIndex("workout_muscle_group"));
+                workouts.add(new Workout(workoutId, name, workoutMuscleGroup));
             }
 
             return workouts;

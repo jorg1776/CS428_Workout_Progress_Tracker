@@ -1,21 +1,22 @@
 package edu.byu.cs428.workoutprogresstracker.views;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,38 +26,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.byu.cs428.workoutprogresstracker.R;
+import edu.byu.cs428.workoutprogresstracker.dao.DataAccessException;
 import edu.byu.cs428.workoutprogresstracker.models.Exercise;
-
-import edu.byu.cs428.workoutprogresstracker.presenters.ExercisesListPresenter;
+import edu.byu.cs428.workoutprogresstracker.models.Workout;
 import edu.byu.cs428.workoutprogresstracker.presenters.ExercisePresenter;
-
+import edu.byu.cs428.workoutprogresstracker.presenters.ExercisesListPresenter;
+import edu.byu.cs428.workoutprogresstracker.presenters.WorkoutPresenter;
 import edu.byu.cs428.workoutprogresstracker.services.requests.ExercisesRequest;
 import edu.byu.cs428.workoutprogresstracker.services.responses.ExercisesResponse;
 import edu.byu.cs428.workoutprogresstracker.views.asyncTasks.ExerciseTask;
 
-public class ExerciseFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class AddExercisesDialog extends DialogFragment implements AdapterView.OnItemSelectedListener{
+    private String selectedMuscleGroup;
     private ExerciseRecyclerViewAdapter exerciseRecyclerViewAdapter;
     private static final int LOADING_DATA_VIEW = 0;
     private static final int ITEM_VIEW = 1;
-    private static final String LOG_TAG = "ExerciseFragment";
-    ExercisesListPresenter presenter;
-    String selectedMuscleGroup = "All";
-    RecyclerView exerciseRecyclerView;
-
+    ExercisesListPresenter eListPresenter;
+    ExercisePresenter ePresenter;
+    private static final String LOG_TAG = "AddExercisesDialog";
     private static final int PAGE_SIZE = 100;
+    private int workoutId;
+
+    private List<Exercise> addedExercises = new ArrayList<>();
+    Button doneButton;
+    EditText workoutName;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        //return inflater.inflate(R.layout.exercise_tab, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        final View view = inflater.inflate(R.layout.add_exercises, container, false);
 
-
-        View view = inflater.inflate(R.layout.exercise_tab, container, false);
+        workoutId = getArguments().getInt("workoutId");
 
         Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
         List<String> muscleGroups = new ArrayList<String>();
-        muscleGroups.add("All");
         muscleGroups.add("Abs");
         muscleGroups.add("Back");
         muscleGroups.add("Biceps");
@@ -69,46 +74,53 @@ public class ExerciseFragment extends Fragment implements AdapterView.OnItemSele
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
 
-        presenter = new ExercisesListPresenter();
-
-        exerciseRecyclerView = view.findViewById(R.id.exerciseRecyclerView);
+        eListPresenter = new ExercisesListPresenter();
+        ePresenter = new ExercisePresenter();
+        //set up the recycler view of the exercises
+        RecyclerView exerciseRecyclerView = view.findViewById(R.id.exerciseRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         exerciseRecyclerView.setLayoutManager(layoutManager);
         exerciseRecyclerViewAdapter = new ExerciseRecyclerViewAdapter();
         exerciseRecyclerView.setAdapter(exerciseRecyclerViewAdapter);
         exerciseRecyclerView.addOnScrollListener(new ExerciseRecyclerViewPaginationScrollListener(layoutManager));
 
-        Button addButton = view.findViewById(R.id.add_button);
-
-        addButton.setOnClickListener(new View.OnClickListener() {
+        doneButton = view.findViewById(R.id.done_button);
+        doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("click");
-                createExerciseBox();
+                WorkoutPresenter wPresenter = new WorkoutPresenter();
+                for (int i = 0; i < addedExercises.size(); i++) {
+                    try {
+                        wPresenter.addExercise(addedExercises.get(i), workoutId);
+                    } catch (DataAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+                createViewWorkoutBox();
+                getDialog().dismiss();
             }
         });
 
         return view;
     }
 
-    private void createExerciseBox () {
-        NewExerciseDialog dialog = new NewExerciseDialog();
+    private void createViewWorkoutBox () {
+        SelectedWorkoutDialog dialog = new SelectedWorkoutDialog();
+        Bundle bundle = new Bundle();
+        bundle.putInt("id", workoutId);
+        dialog.setArguments(bundle);
         dialog.show(getParentFragmentManager(), LOG_TAG);
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         selectedMuscleGroup = parent.getItemAtPosition(position).toString();
-        exerciseRecyclerViewAdapter = new ExerciseRecyclerViewAdapter();
-        exerciseRecyclerView.setAdapter(exerciseRecyclerViewAdapter);
-
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-
 
     //////////////////// EXERCISE RECYCLER METHODS ///////////////////////////////
 
@@ -117,7 +129,7 @@ public class ExerciseFragment extends Fragment implements AdapterView.OnItemSele
         private final TextView exerciseName;
         private final TextView exerciseID;
 
-        ExerciseHolder(@NonNull View itemView, int viewType) {
+        ExerciseHolder(@NonNull final View itemView, int viewType) {
             super(itemView);
 
             if(viewType == ITEM_VIEW) {
@@ -125,11 +137,24 @@ public class ExerciseFragment extends Fragment implements AdapterView.OnItemSele
                 exerciseID = itemView.findViewById(R.id.exercise_id);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
+                    @SuppressLint("UseCompatLoadingForDrawables")
                     @Override
                     public void onClick(View view) {
                         Toast.makeText(getContext(), "You selected '" + exerciseName.getText() + "'.", Toast.LENGTH_SHORT).show();
+                        //FIX! SHOW THAT AN EXERCISE HAS BEEN SELECTED/DESELECTED
 
-                        //add code to open individual exercise stats view
+                        //view.setBackground(getResources().getDrawable(R.drawable.exercise_background_selected));
+
+                        //get the selected exercise
+                        Exercise selectedExercise = null;
+                        try {
+                            selectedExercise = ePresenter.loadExercise(Integer.parseInt(exerciseID.getText().toString()));
+                        } catch (DataAccessException e) {
+                            e.printStackTrace();
+                        }
+                        addedExercises.add(selectedExercise);
+
+
                     }
                 });
             } else {
@@ -143,17 +168,15 @@ public class ExerciseFragment extends Fragment implements AdapterView.OnItemSele
          * Binds the exercise data to the view.
          */
         void bindExercise(Exercise exercise) {
-
             exerciseName.setText(exercise.getName());
             exerciseID.setText(String.valueOf(exercise.getId()));
-
         }
     }
 
     /**
      * The adapter for the RecyclerView that displays the Exercises.
      */
-    private class ExerciseRecyclerViewAdapter extends RecyclerView.Adapter<ExerciseFragment.ExerciseHolder> implements ExerciseTask.Observer {
+    private class ExerciseRecyclerViewAdapter extends RecyclerView.Adapter<ExerciseHolder> implements ExerciseTask.Observer {
 
         private final List<Exercise> exercises = new ArrayList<>();
 
@@ -204,8 +227,8 @@ public class ExerciseFragment extends Fragment implements AdapterView.OnItemSele
          */
         @NonNull
         @Override
-        public ExerciseFragment.ExerciseHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LayoutInflater layoutInflater = LayoutInflater.from(ExerciseFragment.this.getContext());
+        public ExerciseHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            LayoutInflater layoutInflater = LayoutInflater.from(AddExercisesDialog.this.getContext());
             View view;
 
             if(viewType == LOADING_DATA_VIEW) {
@@ -215,7 +238,7 @@ public class ExerciseFragment extends Fragment implements AdapterView.OnItemSele
                 view = layoutInflater.inflate(R.layout.exercise_row, parent, false);
             }
 
-            return new ExerciseFragment.ExerciseHolder(view, viewType);
+            return new ExerciseHolder(view, viewType);
         }
 
         @Override
@@ -250,11 +273,10 @@ public class ExerciseFragment extends Fragment implements AdapterView.OnItemSele
             isLoading = true;
             addLoadingFooter();
 
-            ExerciseTask eTask = new ExerciseTask(presenter, this);
-            //ExercisesRequest request = new ExercisesRequest(PAGE_SIZE, lastExercise);
+            ExerciseTask eTask = new ExerciseTask(eListPresenter, this);
             ExercisesRequest request = new ExercisesRequest(selectedMuscleGroup, PAGE_SIZE, exercises.get(exercises.size() - 1).getId());
             eTask.execute(request);
-            //presenter.loadExercises(selectedMuscleGroup, getItemCount(), exercises.size() - 1);
+            //presenter.loadExercises(selectedMuscleGroup, PAGE_SIZE, exercises.get(exercises.size() - 1).getId());
             //presenter.loadExercises(request);
         }
 
@@ -264,7 +286,7 @@ public class ExerciseFragment extends Fragment implements AdapterView.OnItemSele
 
 
             //lastExercise = (exercises.size() > 0) ? exercises.get(exercises.size() -1) : null;
-            hasMorePages = exercisesResponse.isHasMorePages();
+            //hasMorePages = exercisesResponse.isHasMorePages();
 
             isLoading = false;
             removeLoadingFooter();
@@ -288,8 +310,8 @@ public class ExerciseFragment extends Fragment implements AdapterView.OnItemSele
          * loading footer view) at the bottom of the list.
          */
         private void addLoadingFooter() {
-            Exercise exercise = new Exercise("Dummy exercise", null, null, null, null);
-            exercise.setId(1);
+            Exercise exercise = new Exercise("Dummy exercise", null, null,null, null);
+            exercise.setId(0);
             addItem(exercise);
         }
 
@@ -347,5 +369,4 @@ public class ExerciseFragment extends Fragment implements AdapterView.OnItemSele
             }
         }
     }
-
 }

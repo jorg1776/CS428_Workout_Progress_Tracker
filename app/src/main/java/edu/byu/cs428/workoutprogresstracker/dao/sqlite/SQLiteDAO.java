@@ -95,24 +95,24 @@ public class SQLiteDAO extends SQLiteOpenHelper {
 
         Metric benchObjective = new RepsMetric(10);
         Metric benchGoal = new WeightMetric(155d, "lb");
-        Exercise benchPress = new Exercise(1, "Bench Press", benchObjective, benchGoal, "chest");
+        Exercise benchPress = new Exercise(1, "Bench Press", benchObjective, benchGoal, "Chest");
 
         Metric inclinedBenchObjective = new RepsMetric(10);
         Metric inclinedBenchGoal = new WeightMetric(135d, "lb");
-        Exercise inclinedBenchPress = new Exercise(2, "Inclined Bench Press", inclinedBenchObjective, inclinedBenchGoal, "chest");
+        Exercise inclinedBenchPress = new Exercise(2, "Inclined Bench Press", inclinedBenchObjective, inclinedBenchGoal, "Chest");
 
-        Workout chestWorkout = new Workout(1, "Chest", "chest");
+        Workout chestWorkout = new Workout(1, "Chest", "Chest");
 
 
         Metric mileRunObjective = new DistanceMetric(1d, "mi");
         Metric mileRunGoal = new TimeMetric(9d, "min");
-        Exercise mileRun = new Exercise(3, "Mile Run", mileRunObjective, mileRunGoal, "cardio");
+        Exercise mileRun = new Exercise(3, "Mile Run", mileRunObjective, mileRunGoal, "Cardio");
 
         Metric sprintObjective = new DistanceMetric(100d, "m");
         Metric sprintGoal = new TimeMetric(13d, "sec");
-        Exercise sprint = new Exercise(4, "100m Sprint", sprintObjective, sprintGoal, "cardio");
+        Exercise sprint = new Exercise(4, "100m Sprint", sprintObjective, sprintGoal, "Cardio");
 
-        Workout cardioWorkout = new Workout(2, "Cardio", "cardio");
+        Workout cardioWorkout = new Workout(2, "Cardio", "Cardio");
 
 
         try {

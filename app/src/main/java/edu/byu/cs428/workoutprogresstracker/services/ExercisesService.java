@@ -10,7 +10,9 @@ import edu.byu.cs428.workoutprogresstracker.models.Exercise;
 import edu.byu.cs428.workoutprogresstracker.models.History;
 import edu.byu.cs428.workoutprogresstracker.models.metric.Metric;
 
+
 public class ExercisesService implements ExercisesDAO, ExerciseHistoryDAO {
+
     private final ExercisesDAO exercisesDAO = DAOFactory.getExercisesDAO();
     private final ExerciseHistoryDAO exerciseHistoryDAO = DAOFactory.getExerciseHistoryDAO();
 
