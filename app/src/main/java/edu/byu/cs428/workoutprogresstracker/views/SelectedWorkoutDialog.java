@@ -57,7 +57,11 @@ public class SelectedWorkoutDialog extends DialogFragment {
         final View view = inflater.inflate(R.layout.dialog_selected_workout, container, false);
         workoutId = getArguments().getInt("id");
         WorkoutPresenter wPresenter = new WorkoutPresenter();
-        selectedWorkout = wPresenter.loadWorkout(workoutId);
+        try {
+            selectedWorkout = wPresenter.loadWorkout(workoutId);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
 
         presenter = new WorkoutPresenter();
         addedExercises = new ArrayList<>();
