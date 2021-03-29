@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import edu.byu.cs428.workoutprogresstracker.dao.DataAccessException;
@@ -33,6 +34,8 @@ public class WorkoutsSQLiteDAO implements WorkoutsDAO {
             Cursor cursor = dao.executeQuery("SELECT * FROM workouts WHERE workout_id=?", new String[]{Integer.toString(workoutID)});
 
             if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+
                 String name = cursor.getString(cursor.getColumnIndex("workout_name"));
                 String muscleGroup = cursor.getString(cursor.getColumnIndex("workout_muscle_group"));
                 return new Workout(workoutID, name, muscleGroup);
@@ -84,7 +87,8 @@ public class WorkoutsSQLiteDAO implements WorkoutsDAO {
             while (cursor.moveToNext()) {
                 int workoutId = cursor.getInt(cursor.getColumnIndex("workout_id"));
                 String name = cursor.getString(cursor.getColumnIndex("workout_name"));
-                workouts.add(new Workout(workoutId, name, muscleGroup));
+                String workoutMuscleGroup = cursor.getString(cursor.getColumnIndex("workout_muscle_group"));
+                workouts.add(new Workout(workoutId, name, workoutMuscleGroup));
             }
 
             return workouts;

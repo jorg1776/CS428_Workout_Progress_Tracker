@@ -45,6 +45,8 @@ public class ExercisesSQLiteDAO implements ExercisesDAO {
             Cursor cursor = dao.executeQuery("SELECT * FROM exercises WHERE exercise_id=?", new String[]{ Integer.toString(exerciseID) });
 
             if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+
                 String exerciseName = cursor.getString(cursor.getColumnIndex("exercise_name"));
                 String muscleGroup = cursor.getString(cursor.getColumnIndex("exercise_muscle_group"));
                 String objectiveName = cursor.getString(cursor.getColumnIndex("objective_name"));
