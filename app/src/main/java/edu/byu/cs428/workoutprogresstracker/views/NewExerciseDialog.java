@@ -112,7 +112,9 @@ public class NewExerciseDialog extends DialogFragment implements AdapterView.OnI
                     return;
                 }
                 objective.updateValue(Double.parseDouble(objectiveV));
-                objective.setUnits(objectiveUnits);
+                if (objectiveUnits != null) {
+                    objective.setUnits(objectiveUnits);
+                }
                 goal.updateValue(Double.parseDouble(goalV));
                 goal.setUnits(goalUnits);
 
@@ -124,7 +126,7 @@ public class NewExerciseDialog extends DialogFragment implements AdapterView.OnI
                 //save the created exercise
                 ExercisePresenter presenter = new ExercisePresenter();
                 try {
-                    presenter.saveExercise(exercise);
+                    presenter.createExercise(exercise);
                 } catch (DataAccessException e) {
                     e.printStackTrace();
                 }

@@ -10,6 +10,10 @@ public class ExercisePresenter {
     ExercisesService service = new ExercisesService();
     public ExercisePresenter() {}
 
+    public void createExercise(Exercise exercise) throws DataAccessException {
+        service.createExercise(exercise);
+    }
+
     public Exercise loadExercise (int id) throws DataAccessException {
         return service.loadExercise(id);
     }
