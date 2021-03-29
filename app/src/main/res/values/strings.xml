@@ -15,4 +15,10 @@
     <string name="spinner_title">Muscle group:</string>
     <string name="done">Done</string>
     <string name="delete">Delete</string>
+    <string name="example1">Ex: Weight 80 lbs</string>
+    <string name="example2">Ex: Reps 12</string>
+    <string name="muscle_group">Muscle group</string>
+    <string name="metrics">Metrics</string>
+    <string name="exercise_name">Exercise name</string>
+    <string name="save">Save</string>
 </resources>

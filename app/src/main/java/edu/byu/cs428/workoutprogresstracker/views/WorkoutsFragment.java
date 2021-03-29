@@ -1,5 +1,6 @@
 package edu.byu.cs428.workoutprogresstracker.views;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +15,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,7 +33,7 @@ import edu.byu.cs428.workoutprogresstracker.services.requests.WorkoutsRequest;
 import edu.byu.cs428.workoutprogresstracker.services.responses.WorkoutsResponse;
 import edu.byu.cs428.workoutprogresstracker.views.asyncTasks.WorkoutTask;
 
-public class WorkoutsFragment extends Fragment implements AdapterView.OnItemSelectedListener{
+public class WorkoutsFragment extends Fragment implements AdapterView.OnItemSelectedListener, IDialogListener {
     private WorkoutsRecyclerViewAdapter workoutsRecyclerViewAdapter;
     private static final int LOADING_DATA_VIEW = 0;
     private static final int ITEM_VIEW = 1;
@@ -97,6 +100,7 @@ public class WorkoutsFragment extends Fragment implements AdapterView.OnItemSele
     private void createWorkoutBox () {
         NewWorkoutDialog dialog = new NewWorkoutDialog();
         dialog.show(getParentFragmentManager(), LOG_TAG);
+
     }
 
     private void createViewWorkoutBox (int workoutId) {
@@ -105,7 +109,16 @@ public class WorkoutsFragment extends Fragment implements AdapterView.OnItemSele
         bundle.putInt("id", workoutId);
         dialog.setArguments(bundle);
         dialog.show(getParentFragmentManager(), LOG_TAG);
+
     }
+
+
+    @Override
+    public void notifyClosed() {
+        workoutsRecyclerViewAdapter = new WorkoutsRecyclerViewAdapter();
+        workoutsRecyclerView.setAdapter(workoutsRecyclerViewAdapter);
+    }
+
 
     //////////////////// WORKOUT RECYCLER METHODS ////////////////////////////////
 
@@ -126,7 +139,7 @@ public class WorkoutsFragment extends Fragment implements AdapterView.OnItemSele
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(getContext(), "You selected '" + workoutName.getText() + "'.", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), "You selected '" + workoutName.getText() + "'.", Toast.LENGTH_SHORT).show();
                         createViewWorkoutBox(Integer.parseInt(workoutID.getText().toString()));
                     }
                 });

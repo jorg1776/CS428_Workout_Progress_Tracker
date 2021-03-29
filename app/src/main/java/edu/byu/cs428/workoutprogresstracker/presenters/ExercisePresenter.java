@@ -10,16 +10,20 @@ public class ExercisePresenter {
     ExercisesService service = new ExercisesService();
     public ExercisePresenter() {}
 
+    public void createExercise(Exercise exercise) throws DataAccessException {
+        service.createExercise(exercise);
+    }
+
     public Exercise loadExercise (int id) throws DataAccessException {
         return service.loadExercise(id);
-        /*Exercise exercise1 = new Exercise("exercise 1", null, null, null, null);
-        exercise1.setId(1);
-        return exercise1;*/
     }
 
-    public void saveExercise(Exercise exercise){
-        //service.saveExercise(exercise);
+    public void saveExercise(Exercise exercise) throws DataAccessException {
+        service.saveExercise(exercise);
     }
 
 
+    public void deleteExercise(int exerciseId) throws DataAccessException {
+        service.deleteExercise(exerciseId);
+    }
 }

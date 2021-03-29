@@ -67,6 +67,8 @@ public class ExerciseHistorySQLiteDAO implements ExerciseHistoryDAO {
             Cursor cursor = dao.executeQuery(query, whereArgs);
 
             if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+
                 String goalName = cursor.getString(cursor.getColumnIndex("goal_name"));
                 Double goalValue = cursor.getDouble(cursor.getColumnIndex("goal_value"));
                 String goalUnits = cursor.getString(cursor.getColumnIndex("goal_units"));

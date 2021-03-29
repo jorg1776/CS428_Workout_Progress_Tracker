@@ -34,7 +34,7 @@ import edu.byu.cs428.workoutprogresstracker.services.requests.ExercisesRequest;
 import edu.byu.cs428.workoutprogresstracker.services.responses.ExercisesResponse;
 import edu.byu.cs428.workoutprogresstracker.views.asyncTasks.ExerciseTask;
 
-public class ExerciseFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class ExerciseFragment extends Fragment implements AdapterView.OnItemSelectedListener, IDialogListener {
     private ExerciseRecyclerViewAdapter exerciseRecyclerViewAdapter;
     private static final int LOADING_DATA_VIEW = 0;
     private static final int ITEM_VIEW = 1;
@@ -48,7 +48,6 @@ public class ExerciseFragment extends Fragment implements AdapterView.OnItemSele
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        //return inflater.inflate(R.layout.exercise_tab, container, false);
 
 
         View view = inflater.inflate(R.layout.exercise_tab, container, false);
@@ -109,6 +108,20 @@ public class ExerciseFragment extends Fragment implements AdapterView.OnItemSele
 
     }
 
+    @Override
+    public void notifyClosed() {
+        exerciseRecyclerViewAdapter = new ExerciseRecyclerViewAdapter();
+        exerciseRecyclerView.setAdapter(exerciseRecyclerViewAdapter);
+    }
+
+    private void createViewExerciseBox (int exerciseId) {
+        SelectedExerciseDialog dialog = new SelectedExerciseDialog();
+        Bundle bundle = new Bundle();
+        bundle.putInt("id", exerciseId);
+        dialog.setArguments(bundle);
+        dialog.show(getParentFragmentManager(), LOG_TAG);
+    }
+
 
     //////////////////// EXERCISE RECYCLER METHODS ///////////////////////////////
 
@@ -127,9 +140,8 @@ public class ExerciseFragment extends Fragment implements AdapterView.OnItemSele
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(getContext(), "You selected '" + exerciseName.getText() + "'.", Toast.LENGTH_SHORT).show();
-
-                        //add code to open individual exercise stats view
+                        //Toast.makeText(getContext(), "You selected '" + exerciseName.getText() + "'.", Toast.LENGTH_SHORT).show();
+                        createViewExerciseBox(Integer.parseInt(exerciseID.getText().toString()));
                     }
                 });
             } else {
