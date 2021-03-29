@@ -1,6 +1,8 @@
 package edu.byu.cs428.workoutprogresstracker.views;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -14,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +24,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,7 +49,7 @@ import edu.byu.cs428.workoutprogresstracker.views.asyncTasks.ExerciseTask;
 public class NewWorkoutDialog extends DialogFragment implements AdapterView.OnItemSelectedListener {
     private EditText workoutName;
     private Button createButton;
-    private String selectedMuscleGroup;
+    private String selectedMuscleGroup = "All";
     private List<Exercise> addedExercises = new ArrayList<>();
     private ExerciseRecyclerViewAdapter exerciseRecyclerViewAdapter;
     private static final int LOADING_DATA_VIEW = 0;
@@ -54,6 +59,7 @@ public class NewWorkoutDialog extends DialogFragment implements AdapterView.OnIt
     private static final String LOG_TAG = "WorkoutDialog";
     private static final int PAGE_SIZE = 100;
     RecyclerView exerciseRecyclerView;
+    DialogManager dialogManager = DialogManager.getInstance();
 
     @Nullable
     @Override
@@ -66,6 +72,7 @@ public class NewWorkoutDialog extends DialogFragment implements AdapterView.OnIt
         Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
         List<String> muscleGroups = new ArrayList<String>();
+        muscleGroups.add("All");
         muscleGroups.add("All");
         muscleGroups.add("Abs");
         muscleGroups.add("Back");
@@ -99,7 +106,6 @@ public class NewWorkoutDialog extends DialogFragment implements AdapterView.OnIt
                     toast.show();
                     return;
                 }
-                //FIX THE INT BEING PASSED HERE
                 Workout workout = new Workout(name, addedExercises, selectedMuscleGroup);
                 //save the created workout
                 WorkoutPresenter presenter = new WorkoutPresenter();
@@ -108,12 +114,14 @@ public class NewWorkoutDialog extends DialogFragment implements AdapterView.OnIt
                 } catch (DataAccessException e) {
                     e.printStackTrace();
                 }
-
                 getDialog().dismiss();
+                dialogManager.notifyListeners();
+
             }
         });
         return view;
     }
+
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -126,6 +134,7 @@ public class NewWorkoutDialog extends DialogFragment implements AdapterView.OnIt
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
 
     //////////////////// EXERCISE RECYCLER METHODS ///////////////////////////////
 
@@ -146,9 +155,6 @@ public class NewWorkoutDialog extends DialogFragment implements AdapterView.OnIt
                     @Override
                     public void onClick(View view) {
                         Toast.makeText(getContext(), "You selected '" + exerciseName.getText() + "'.", Toast.LENGTH_SHORT).show();
-                        //FIX! SHOW THAT AN EXERCISE HAS BEEN SELECTED/DESELECTED
-
-                        //view.setBackground(getResources().getDrawable(R.drawable.exercise_background_selected));
 
                         //get the selected exercise
                         Exercise selectedExercise = null;
@@ -157,9 +163,14 @@ public class NewWorkoutDialog extends DialogFragment implements AdapterView.OnIt
                         } catch (DataAccessException e) {
                             e.printStackTrace();
                         }
-                        addedExercises.add(selectedExercise);
-
-
+                        if(exerciseName.getCurrentTextColor() == Color.BLUE) {
+                            exerciseName.setTextColor(Color.BLACK);
+                            addedExercises.remove(selectedExercise);
+                        }
+                        else {
+                            exerciseName.setTextColor(Color.BLUE);
+                            addedExercises.add(selectedExercise);
+                        }
                     }
                 });
             } else {

@@ -27,16 +27,20 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
+        DialogManager manager = DialogManager.getInstance();
         Fragment fragment = null;
         switch (position) {
             case 0:
                 fragment = new CalendarFragment();
+                manager.addListener((IDialogListener)fragment);
                 break;
             case 1:
                 fragment = new WorkoutsFragment();
+                manager.addListener((IDialogListener)fragment);
                 break;
             case 2:
                 fragment = new ExerciseFragment();
+                manager.addListener((IDialogListener)fragment);
         }
         return fragment;
     }

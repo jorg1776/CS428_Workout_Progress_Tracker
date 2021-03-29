@@ -37,7 +37,7 @@ import edu.byu.cs428.workoutprogresstracker.services.responses.ExercisesResponse
 import edu.byu.cs428.workoutprogresstracker.views.asyncTasks.ExerciseTask;
 
 public class AddExercisesDialog extends DialogFragment implements AdapterView.OnItemSelectedListener{
-    private String selectedMuscleGroup;
+    private String selectedMuscleGroup = "All";
     private ExerciseRecyclerViewAdapter exerciseRecyclerViewAdapter;
     private static final int LOADING_DATA_VIEW = 0;
     private static final int ITEM_VIEW = 1;
@@ -46,6 +46,7 @@ public class AddExercisesDialog extends DialogFragment implements AdapterView.On
     private static final String LOG_TAG = "AddExercisesDialog";
     private static final int PAGE_SIZE = 100;
     private int workoutId;
+    RecyclerView exerciseRecyclerView;
 
     private List<Exercise> addedExercises = new ArrayList<>();
     Button doneButton;
@@ -62,6 +63,7 @@ public class AddExercisesDialog extends DialogFragment implements AdapterView.On
         Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
         List<String> muscleGroups = new ArrayList<String>();
+        muscleGroups.add("All");
         muscleGroups.add("Abs");
         muscleGroups.add("Back");
         muscleGroups.add("Biceps");
@@ -74,10 +76,11 @@ public class AddExercisesDialog extends DialogFragment implements AdapterView.On
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
 
+
         eListPresenter = new ExercisesListPresenter();
         ePresenter = new ExercisePresenter();
         //set up the recycler view of the exercises
-        RecyclerView exerciseRecyclerView = view.findViewById(R.id.exerciseRecyclerView);
+        exerciseRecyclerView = view.findViewById(R.id.exerciseRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         exerciseRecyclerView.setLayoutManager(layoutManager);
         exerciseRecyclerViewAdapter = new ExerciseRecyclerViewAdapter();
@@ -115,6 +118,9 @@ public class AddExercisesDialog extends DialogFragment implements AdapterView.On
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         selectedMuscleGroup = parent.getItemAtPosition(position).toString();
+        exerciseRecyclerViewAdapter = new ExerciseRecyclerViewAdapter();
+        exerciseRecyclerView.setAdapter(exerciseRecyclerViewAdapter);
+
     }
 
     @Override

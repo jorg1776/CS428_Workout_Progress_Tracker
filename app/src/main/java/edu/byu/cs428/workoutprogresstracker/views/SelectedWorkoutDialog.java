@@ -39,6 +39,7 @@ public class SelectedWorkoutDialog extends DialogFragment {
     Workout selectedWorkout;
     Button doneButton;
     Button deleteButton;
+    DialogManager dialogManager = DialogManager.getInstance();
 
     private ExerciseRecyclerViewAdapter exerciseRecyclerViewAdapter;
     private static final int LOADING_DATA_VIEW = 0;
@@ -94,7 +95,11 @@ public class SelectedWorkoutDialog extends DialogFragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 selectedWorkout.setName(workoutName.getText().toString());
-                presenter.saveWorkout(selectedWorkout);
+                try {
+                    presenter.saveWorkout(selectedWorkout);
+                } catch (DataAccessException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -107,6 +112,7 @@ public class SelectedWorkoutDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 getDialog().dismiss();
+                dialogManager.notifyListeners();
             }
         });
 
@@ -119,6 +125,7 @@ public class SelectedWorkoutDialog extends DialogFragment {
                     e.printStackTrace();
                 }
                 getDialog().dismiss();
+                dialogManager.notifyListeners();
             }
         });
 
@@ -140,6 +147,7 @@ public class SelectedWorkoutDialog extends DialogFragment {
         dialog.setArguments(bundle);
         dialog.show(getParentFragmentManager(), LOG_TAG);
         getDialog().dismiss();
+        dialogManager.notifyListeners();
     }
 
 
