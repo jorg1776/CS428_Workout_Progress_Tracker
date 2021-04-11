@@ -3,22 +3,25 @@ package edu.byu.cs428.workoutprogresstracker.views.asyncTasks;
 import android.os.AsyncTask;
 
 import edu.byu.cs428.workoutprogresstracker.dao.DataAccessException;
+import edu.byu.cs428.workoutprogresstracker.models.Exercise;
 import edu.byu.cs428.workoutprogresstracker.presenters.ExercisePresenter;
 import edu.byu.cs428.workoutprogresstracker.presenters.ExercisesListPresenter;
+import edu.byu.cs428.workoutprogresstracker.services.requests.ExerciseHistoryRequest;
 import edu.byu.cs428.workoutprogresstracker.services.requests.ExercisesRequest;
+import edu.byu.cs428.workoutprogresstracker.services.responses.ExerciseHistoryResponse;
 import edu.byu.cs428.workoutprogresstracker.services.responses.ExercisesResponse;
 
-public class ExerciseTask extends AsyncTask<ExercisesRequest, Void, ExercisesResponse> {
-    private final ExercisesListPresenter presenter;
+public class ExerciseHistoryTask extends AsyncTask<ExerciseHistoryRequest, Void, ExerciseHistoryResponse> {
+    private final ExercisePresenter presenter;
     private final Observer observer;
     private Exception exception;
 
     public interface Observer {
-        void exerciseRetrieved(ExercisesResponse exercisesResponse);
+        void exerciseRetrieved(ExerciseHistoryResponse exerciseHistoryResponse);
         void handleException(Exception exception);
     }
 
-    public ExerciseTask(ExercisesListPresenter presenter, Observer observer) {
+    public ExerciseHistoryTask(ExercisePresenter presenter, Observer observer) {
         if(observer == null) {
             throw new NullPointerException();
         }
@@ -27,12 +30,13 @@ public class ExerciseTask extends AsyncTask<ExercisesRequest, Void, ExercisesRes
     }
 
     @Override
-    protected ExercisesResponse doInBackground(ExercisesRequest... exerciseRequests) {
+    protected ExerciseHistoryResponse doInBackground(ExerciseHistoryRequest... exerciseHistoryRequests) {
 
-        ExercisesResponse response = null;
+        ExerciseHistoryResponse response = null;
 
         try {
-            response = presenter.loadExercises(exerciseRequests[0]);
+            int id = exerciseHistoryRequests[0].getId();
+            response = new ExerciseHistoryResponse(presenter.loadExercise(id), false);
         } catch (DataAccessException e) {
             e.printStackTrace();
         }
@@ -41,11 +45,11 @@ public class ExerciseTask extends AsyncTask<ExercisesRequest, Void, ExercisesRes
     }
 
 
-    protected void onPostExecute(ExercisesResponse exercisesResponse) {
+    protected void onPostExecute(ExerciseHistoryResponse exerciseHistoryResponse) {
         if(exception != null) {
             observer.handleException(exception);
         } else {
-            observer.exerciseRetrieved(exercisesResponse);
+            observer.exerciseRetrieved(exerciseHistoryResponse);
         }
     }
 }
