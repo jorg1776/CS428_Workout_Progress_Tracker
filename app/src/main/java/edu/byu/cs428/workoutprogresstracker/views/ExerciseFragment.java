@@ -230,7 +230,7 @@ public class ExerciseFragment extends Fragment {
          * loading footer view) at the bottom of the list.
          */
         private void addLoadingFooter() {
-            addItem(new Exercise());
+//            addItem(new Exercise());
         }
 
         /**
