@@ -114,21 +114,44 @@ public class SQLiteDAO extends SQLiteOpenHelper {
 
         Workout cardioWorkout = new Workout(2, "Cardio", "Cardio");
 
+        Metric russianObjective = new RepsMetric(50);
+        Metric russianGoal = new WeightMetric(15d, "lb");
+        Exercise russianTwist = new Exercise(5, "Russian Twists", russianObjective, russianGoal, "Abs");
+
+        Metric plankObjective = new RepsMetric(3);
+        Metric plankGoal = new TimeMetric(2d, "min");
+        Exercise plank = new Exercise(6, "Plank", plankObjective, plankGoal, "Abs");
+
+        Metric sitUpsObjective = new RepsMetric(20);
+        Metric sitUpsGoal = new WeightMetric(15d, "lbs");
+        Exercise sitUps = new Exercise(7, "Sit Ups", sitUpsObjective, sitUpsGoal, "Abs");
+
+        Workout abWorkout = new Workout(3, "Ab Burner", "Abs");
+
+
 
         try {
             exercisesService.createExercise(benchPress);
             exercisesService.createExercise(inclinedBenchPress);
             exercisesService.createExercise(mileRun);
             exercisesService.createExercise(sprint);
+            exercisesService.createExercise(russianTwist);
+            exercisesService.createExercise(plank);
+            exercisesService.createExercise(sitUps);
 
             workoutsService.createWorkout(chestWorkout);
             workoutsService.createWorkout(cardioWorkout);
+            workoutsService.createWorkout(abWorkout);
 
             workoutsService.addExerciseToWorkout(benchPress, chestWorkout.getId());
             workoutsService.addExerciseToWorkout(inclinedBenchPress, chestWorkout.getId());
 
             workoutsService.addExerciseToWorkout(mileRun, cardioWorkout.getId());
             workoutsService.addExerciseToWorkout(sprint, cardioWorkout.getId());
+
+            workoutsService.addExerciseToWorkout(russianTwist, abWorkout.getId());
+            workoutsService.addExerciseToWorkout(plank, abWorkout.getId());
+            workoutsService.addExerciseToWorkout(sitUps, abWorkout.getId());
         } catch (DataAccessException e) {
             System.err.println(e);
         }
