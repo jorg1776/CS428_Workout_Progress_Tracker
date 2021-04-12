@@ -168,15 +168,22 @@ public class SelectedWorkoutDialog extends DialogFragment {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(getContext(), "You selected '" + exerciseName.getText() + "'.", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), "You selected '" + exerciseName.getText() + "'.", Toast.LENGTH_SHORT).show();
+                        selectedExerciseBox(Integer.parseInt(exerciseID.getText().toString()));
 
-                        //add code to open individual exercise stats view
                     }
                 });
             } else {
                 exerciseName = null;
                 exerciseID = null;
             }
+        }
+        private void selectedExerciseBox (int exerciseID) {
+            SelectedExerciseDialog dialog = new SelectedExerciseDialog();
+            Bundle bundle = new Bundle();
+            bundle.putInt("id", exerciseID);
+            dialog.setArguments(bundle);
+            dialog.show(getParentFragmentManager(), LOG_TAG);
         }
 
 

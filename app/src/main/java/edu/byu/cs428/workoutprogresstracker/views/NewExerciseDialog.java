@@ -8,8 +8,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -19,7 +17,6 @@ import androidx.fragment.app.DialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import edu.byu.cs428.workoutprogresstracker.R;
 import edu.byu.cs428.workoutprogresstracker.dao.DataAccessException;
@@ -52,7 +49,7 @@ public class NewExerciseDialog extends DialogFragment implements AdapterView.OnI
         final View view = inflater.inflate(R.layout.dialog_new_exercise, container, false);
 
         objectiveValue = view.findViewById(R.id.objective_value);
-        goalValue = view.findViewById(R.id.goal_value);
+        goalValue = view.findViewById(R.id.exercise_goal_value);
 
         Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);

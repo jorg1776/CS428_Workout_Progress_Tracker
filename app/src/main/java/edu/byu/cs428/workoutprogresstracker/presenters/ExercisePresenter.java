@@ -4,6 +4,7 @@ import android.view.View;
 
 import edu.byu.cs428.workoutprogresstracker.dao.DataAccessException;
 import edu.byu.cs428.workoutprogresstracker.models.Exercise;
+import edu.byu.cs428.workoutprogresstracker.models.metric.Metric;
 import edu.byu.cs428.workoutprogresstracker.services.ExercisesService;
 
 public class ExercisePresenter {
@@ -25,5 +26,9 @@ public class ExercisePresenter {
 
     public void deleteExercise(int exerciseId) throws DataAccessException {
         service.deleteExercise(exerciseId);
+    }
+
+    public void addExerciseHistory(int exerciseId, Metric metric) throws DataAccessException{
+        service.addNewGoalReached(exerciseId, metric);
     }
 }

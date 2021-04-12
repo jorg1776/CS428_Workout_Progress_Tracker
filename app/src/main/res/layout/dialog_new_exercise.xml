@@ -140,7 +140,7 @@
                 <EditText
                     android:layout_width="30dp"
                     android:layout_height="40dp"
-                    android:id="@+id/goal_value"
+                    android:id="@+id/exercise_goal_value"
                     android:hint="45"
                     android:paddingBottom="5dp"/>
 
